@@ -1,1 +1,14 @@
-Copy every file and folder into the root of your mjc-site repository. Commit and push to main. GitHub Actions will build and deploy the site. Expected URL: https://maximumjusticecybersecurity.github.io/mjc-site/
+MJC Executive Visibility / TrustMap Build
+
+Copy all files and folders into the root of your mjc-site repository.
+
+Then:
+1. Commit to main
+2. Wait for GitHub Actions to deploy
+3. Confirm green check
+4. Open https://maximumjusticecybersecurity.github.io/mjc-site/
+
+Important:
+- CyberShield remains separate
+- TrustMap CTA launches CyberShield
+- Calendly is wired to https://calendly.com/maxjustice

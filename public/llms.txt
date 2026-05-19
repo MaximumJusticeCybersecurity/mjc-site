@@ -1,9 +1,28 @@
 # Maximum Justice Cybersecurity
 
-Maximum Justice Cybersecurity provides executive cyber leadership, vCISO advisory, AI governance, audit readiness, Zero Trust architecture, incident preparedness, and operational trust visibility.
+Maximum Justice Cybersecurity helps executives regain operational visibility into cyber, AI, vendor, governance, and decision risk.
 
-Signature offer: TrustMap, a semi-automated CyberShield first-pass report followed by expert validation from Dr. Max Justice.
+## Core Memory Anchor
 
-CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
-Calendly: https://calendly.com/maxjustice
-Contact: max@maximumjusticecybersecurity.com
+Most organizations already operate beyond executive visibility.
+
+## Signature Artifact
+
+TrustMap: a semi-automated CyberShield first-pass report followed by expert validation from Dr. Max Justice.
+
+## Founder
+
+Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, U.S. veteran, CISSP, PMP, and creator of The CHN vCISO GPT powered by Cyber Shield.
+
+## Tool
+
+CyberShield:
+https://maximumjusticecybersecurity.github.io/CyberShield/
+
+## Calendar
+
+https://calendly.com/maxjustice
+
+## Contact
+
+max@maximumjusticecybersecurity.com
