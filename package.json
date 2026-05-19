@@ -1,0 +1,13 @@
+{
+  "name": "mjc-website-vercel-ready",
+  "version": "12.4.1",
+  "private": true,
+  "description": "Maximum Justice Cybersecurity website package prepared for Vercel deployment from GitHub.",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
