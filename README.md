@@ -1,12 +1,38 @@
-# Maximum Justice Cybersecurity Modern Authority Site V2
+# MJC Website V4
 
-This is the modern high-conversion MJC authority website build.
+This is the MJC Website V4 build.
 
-CyberShield is kept separate and linked exactly as provided:
+## Architecture
+
+MJC Website V4 is the parent authority site for Maximum Justice Cybersecurity.
+
+CyberShield is not embedded. It remains a separate tool and launches here:
 
 https://maximumjusticecybersecurity.github.io/CyberShield/
 
-## Local Setup
+## Key Design Direction
+
+- Modern, high-conversion executive site
+- AI-native trust positioning
+- Machine-readable authority surface
+- Operational trust narrative
+- vCISO, Security SME, Cybersecurity SME credibility
+- CyberShield as a separate featured tool
+- Executive briefing as primary conversion
+
+## Deployment
+
+This package includes:
+
+- React/Vite source
+- vite.config.js with the correct GitHub Pages base
+- GitHub Actions deploy workflow
+- JSON-LD metadata in index.html
+- public/llms.txt
+- public/robots.txt
+- public/sitemap.xml
+
+## Local Run
 
 ```bash
 npm install
@@ -19,36 +45,14 @@ npm run dev
 npm run build
 ```
 
-## GitHub Pages Notes
+## GitHub Pages
 
-This is a React/Vite project.  For GitHub Pages, either:
+Push to the `main` branch. The included GitHub Actions workflow deploys the site to GitHub Pages.
 
-1. Use GitHub Actions to build and deploy the `dist` folder, or
-2. Build locally with `npm run build` and deploy the generated `dist` output
+Expected URL:
 
-## Recommended Repository
+https://maximumjusticecybersecurity.github.io/mjc-site/
 
-Keep this separate from CyberShield.
+## Contact
 
-Recommended repo:
-
-```text
-mjc-site
-```
-
-Recommended local path:
-
-```text
-C:\MJC-Site
-```
-
-## Current Contact
-
-```text
 max@maximumjusticecybersecurity.com
-```
-
-## Architecture
-
-MJC = parent authority site  
-CyberShield = separate featured tool

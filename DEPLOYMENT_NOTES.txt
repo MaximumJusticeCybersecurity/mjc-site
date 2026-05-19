@@ -1,16 +1,15 @@
-Maximum Justice Cybersecurity Modern Site V2
+MJC Website V4 Deployment Notes
 
-Recommended:
-1. Create a new repo called mjc-site
-2. Clone it to C:\MJC-Site
-3. Copy all files from this package into that folder
-4. Commit and push
-5. Run npm install
-6. Run npm run build
-7. Deploy via GitHub Pages / GitHub Actions
+1. Extract this package
+2. Copy all files into your mjc-site repository root
+3. Commit and push to main
+4. Go to GitHub → Settings → Pages
+5. Set source to GitHub Actions
+6. Go to Actions and confirm the V4 deployment workflow runs successfully
+7. Open https://maximumjusticecybersecurity.github.io/mjc-site/
 
-CyberShield remains separate:
-https://maximumjusticecybersecurity.github.io/CyberShield/
-
-Contact email is:
-max@maximumjusticecybersecurity.com
+Important:
+- This package includes vite.config.js with base "/mjc-site/"
+- CyberShield remains separate and is only linked
+- The MJC website is the authority and conversion site
+- CyberShield is the separate operational tool

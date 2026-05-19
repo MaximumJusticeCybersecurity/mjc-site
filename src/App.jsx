@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles.css";
 
 const CYBERSHIELD_URL = "https://maximumjusticecybersecurity.github.io/CyberShield/";
@@ -6,365 +6,137 @@ const CONTACT_EMAIL = "max@maximumjusticecybersecurity.com";
 const BRIEFING_MAILTO =
   "mailto:max@maximumjusticecybersecurity.com?subject=Executive%20Cyber%20%26%20AI%20Operational%20Readiness%20Briefing";
 
-function Badge({ children }) {
-  return <span className="badge">{children}</span>;
-}
+const services = [
+  ["Primary Offer", "Executive Cyber & AI Operational Readiness Briefing", "A focused executive session that maps cyber risk, AI governance exposure, ownership gaps, and immediate operational priorities.", true],
+  ["vCISO", "Fractional vCISO Advisory", "Executive security leadership for organizations that need accountability, strategy, and board-ready cyber governance without full-time overhead."],
+  ["AI Governance", "Human-Command AI Governance", "Policy, authority, oversight, and operational controls for AI adoption where humans remain accountable for consequential decisions."],
+  ["GRC", "Audit Readiness & Evidence Discipline", "CMMC, NIST, HIPAA, vendor risk, evidence readiness, control ownership, and defensible governance workflows."],
+  ["Architecture", "Zero Trust & Security Architecture", "Identity, access, segmentation, control design, operational resilience, and pragmatic modernization for real-world environments."],
+  ["Preparedness", "Incident Response & Executive Tabletop Readiness", "Prepare leadership teams to make clear decisions under pressure before ransomware, vendor failure, or AI misuse creates damage."],
+];
 
-function RiskBar({ title, value, status, className }) {
+const industries = ["Federal Contractors", "Healthcare", "Manufacturing", "Financial Services", "Legal & Professional Services"];
+
+function CTAButtons({ center = false }) {
   return (
-    <div className="risk-bar">
-      <div className="risk-bar__top">
-        <span>{title}</span>
-        <strong>{status}</strong>
-      </div>
-      <div className="risk-bar__track">
-        <div className={`risk-bar__fill ${className}`} style={{ width: value }} />
-      </div>
+    <div className={`cta-row ${center ? "center" : ""}`}>
+      <a className="btn btn-primary" href={BRIEFING_MAILTO}>Schedule Executive Briefing</a>
+      <a className="btn btn-secondary" href={CYBERSHIELD_URL} target="_blank" rel="noreferrer">Launch CyberShield</a>
     </div>
   );
 }
 
-function ProblemCard({ title, text }) {
-  return (
-    <article className="lift-card">
-      <div className="card-icon" />
-      <h3>{title}</h3>
-      <p>{text}</p>
-    </article>
-  );
-}
-
-function ServiceCard({ title }) {
-  return (
-    <article className="service-card">
-      <div className="card-icon" />
-      <h3>{title}</h3>
-      <p>
-        Practical executive-focused cybersecurity and governance leadership designed to reduce
-        uncertainty and improve operational resilience.
-      </p>
-    </article>
-  );
-}
+function Badge({ children }) { return <span className="badge">{children}</span>; }
 
 export default function App() {
+  const [signal, setSignal] = useState("AI governance drift");
+  const exposures = ["AI governance drift", "Vendor exposure", "Audit evidence gaps", "Executive blind spots"];
+
   return (
     <div className="site-shell">
-      <header className="site-header">
-        <div className="header-inner">
-          <a className="brand" href="#top" aria-label="Maximum Justice Cybersecurity home">
-            <div className="brand-mark">MJC</div>
-            <div>
-              <strong>Maximum Justice Cybersecurity</strong>
-              <span>vCISO | Security SME | Cybersecurity SME</span>
-            </div>
-          </a>
-
-          <nav className="nav" aria-label="Primary navigation">
-            <a href="#services">Services</a>
-            <a href="#industries">Industries</a>
-            <a href="#about">About</a>
-            <a href="#tools">CyberShield</a>
-            <a className="nav-cta" href={BRIEFING_MAILTO}>
-              Schedule Briefing
-            </a>
-          </nav>
-        </div>
+      <header className="topbar">
+        <a href="#top" className="brand">
+          <div className="brand-orb">MJC</div>
+          <div><strong>Maximum Justice Cybersecurity</strong><span>vCISO | AI Governance | Operational Trust</span></div>
+        </a>
+        <nav className="nav">
+          <a href="#authority">Authority</a><a href="#services">Services</a><a href="#trust">Trust</a><a href="#industries">Industries</a><a href="#tool">CyberShield</a><a href={BRIEFING_MAILTO} className="nav-button">Briefing</a>
+        </nav>
       </header>
 
       <main id="top">
         <section className="hero">
-          <div className="hero-bg hero-bg-a" />
-          <div className="hero-bg hero-bg-b" />
-
+          <div className="mesh mesh-one" /><div className="mesh mesh-two" />
           <div className="container hero-grid">
             <div className="hero-copy">
-              <div className="pill">Executive Operational Control for Cyber & AI Risk</div>
-
-              <h1>Leadership cannot govern what it cannot clearly see.</h1>
-
-              <p className="hero-sub">
-                Maximum Justice Cybersecurity helps executives regain operational visibility, AI
-                governance clarity, and accountable cyber leadership before fragmented decisions
-                become business disruption.
-              </p>
-
-              <div className="cta-row">
-                <a className="btn btn-primary" href={BRIEFING_MAILTO}>
-                  Schedule Executive Briefing
-                </a>
-                <a className="btn btn-secondary" href={CYBERSHIELD_URL} target="_blank" rel="noreferrer">
-                  Launch CyberShield
-                </a>
-              </div>
-
-              <div className="badge-row">
-                <Badge>U.S. Veteran</Badge>
-                <Badge>CISSP</Badge>
-                <Badge>PMP</Badge>
-                <Badge>AI Governance</Badge>
-                <Badge>Zero Trust</Badge>
-              </div>
+              <div className="status-pill"><span className="pulse" />MJC Website V4 | Operational trust surface</div>
+              <h1>The internet is shifting from <em>attention</em> to <em>interpretation.</em></h1>
+              <p className="hero-sub">AI systems are already evaluating organizations, shaping decisions, and influencing operations. Maximum Justice Cybersecurity helps leaders make cyber and AI risk visible, governed, and defensible before trust breaks under pressure.</p>
+              <CTAButtons />
+              <div className="badge-row"><Badge>U.S. Veteran</Badge><Badge>vCISO</Badge><Badge>Security SME</Badge><Badge>Cybersecurity SME</Badge><Badge>AI Governance</Badge></div>
             </div>
 
-            <aside className="snapshot-card" aria-label="Executive risk snapshot preview">
-              <div className="snapshot-top">
-                <div>
-                  <span className="section-kicker">Executive Snapshot</span>
-                  <h2>Operational Risk Visibility</h2>
-                </div>
-
-                <div className="score-ring">
-                  <strong>68</strong>
-                  <span>/100</span>
-                </div>
+            <aside className="hero-console">
+              <div className="console-top"><div><span className="kicker">Executive Interpretation Layer</span><h2>What AI sees before humans call</h2></div><div className="live-chip">LIVE</div></div>
+              <div className="agent-orbit">
+                <div className="core">MJC</div>
+                <span className="orbit orbit-a">Evidence</span><span className="orbit orbit-b">Authority</span><span className="orbit orbit-c">Governance</span><span className="orbit orbit-d">Trust</span>
               </div>
-
-              <div className="risk-bars">
-                <RiskBar title="AI Governance Visibility" status="Limited" value="42%" className="red" />
-                <RiskBar title="Executive Reporting Clarity" status="Fragmented" value="56%" className="yellow" />
-                <RiskBar title="Vendor Coordination" status="Moderate" value="63%" className="yellow" />
-                <RiskBar title="Audit Readiness" status="Developing" value="74%" className="green" />
-              </div>
-
-              <div className="reality-box">
-                <span>Executive Reality</span>
-                <p>
-                  Most organizations already operate with fragmented cyber and AI governance. The
-                  problem is not tooling. The problem is visibility, ownership, and operational
-                  accountability.
-                </p>
+              <div className="signal-grid">
+                <div className="signal-card"><span>Human authority</span><strong className="good-text">Explicit</strong><i className="good" /></div>
+                <div className="signal-card"><span>AI governance</span><strong className="warn-text">Emerging</strong><i className="warn" /></div>
+                <div className="signal-card"><span>Machine readability</span><strong className="good-text">Structured</strong><i className="good" /></div>
+                <div className="signal-card"><span>Runtime evidence</span><strong className="warn-text">Developing</strong><i className="warn" /></div>
               </div>
             </aside>
           </div>
         </section>
 
-        <section className="section border-top">
-          <div className="container">
-            <div className="section-intro">
-              <span className="section-kicker">The Leadership Problem</span>
-              <h2>
-                Most organizations do not need more cybersecurity noise.{" "}
-                <em>They need operational control.</em>
-              </h2>
-              <p>
-                Security tools, MSP dashboards, compliance reports, AI experimentation, and vendor
-                ecosystems are expanding faster than executive visibility. MJC helps leadership regain
-                clarity before fragmented decisions become operational damage.
-              </p>
-            </div>
+        <section className="ticker"><div><span>Authority remains human</span><span>Accountability remains human</span><span>Trust requires evidence</span><span>Cyber risk is operational risk</span><span>AI governance is no longer optional</span><span>Authority remains human</span><span>Accountability remains human</span><span>Trust requires evidence</span></div></section>
 
-            <div className="problem-grid">
-              <ProblemCard
-                title="Fragmented Ownership"
-                text="Cyber, compliance, AI, vendors, and operations often operate without a unified command structure."
-              />
-              <ProblemCard
-                title="AI Without Governance"
-                text="Employees adopt AI tools faster than accountability and defensible oversight mature."
-              />
-              <ProblemCard
-                title="Executive Blind Spots"
-                text="Leadership is increasingly asked to approve risk without operationally useful visibility."
-              />
-              <ProblemCard
-                title="Audit Exposure"
-                text="Evidence may exist, but governance discipline and operational readiness often do not."
-              />
+        <section id="authority" className="section split-section">
+          <div className="container split-grid">
+            <div><span className="kicker">Why MJC Exists</span><h2>Executives are being asked to approve risk they cannot clearly see.</h2><p>Security tools produce activity. Compliance programs produce artifacts. MSPs produce tickets. None of that automatically gives leadership a defensible operating picture of cyber risk, AI usage, vendor exposure, and accountability.</p></div>
+            <div className="stacked-proof">{[["Cyber","Who owns risk under pressure?"],["AI","Who governs decisions before execution?"],["Vendors","Which dependencies can disrupt operations?"],["Evidence","Can trust be verified after the fact?"]].map(([a,b])=><div className="proof-row" key={a}><span>{a}</span><strong>{b}</strong></div>)}</div>
+          </div>
+        </section>
+
+        <section className="section interpretation-section">
+          <div className="container">
+            <div className="section-heading"><span className="kicker">The Interpretation Economy</span><h2>AI agents will not read your brand the way humans do.</h2><p>They will parse structure, evidence, signals, schemas, assertions, relationships, and credibility markers. MJC V4 is built to speak to both executive buyers and machine interpretation systems.</p></div>
+            <div className="trust-table">
+              <div className="trust-column"><h3>Human Trust</h3>{["Brand","Narrative","Emotion","Reputation","Messaging"].map(x=><div key={x}>{x}</div>)}</div>
+              <div className="bridge-column"><span /><span /><span /></div>
+              <div className="trust-column machine"><h3>Machine Trust</h3>{["Evidence","Telemetry","Verification","Authorization","Structured Truth"].map(x=><div key={x}>{x}</div>)}</div>
             </div>
           </div>
         </section>
 
-        <section id="services" className="section border-top subtle">
+        <section id="trust" className="section dark-card-section">
           <div className="container">
-            <div className="section-intro wide">
-              <span className="section-kicker">Services</span>
-              <h2>Executive cyber leadership that translates risk into action.</h2>
-              <p>
-                MJC is built for executives, owners, boards, and operational leaders who need clear
-                decisions, accountable governance, and resilient cyber operations.
-              </p>
-            </div>
-
-            <div className="services-grid">
-              <article className="primary-service">
-                <div className="pill">Primary Offer</div>
-                <h3>Executive Cyber & AI Operational Readiness Briefing</h3>
-                <p>
-                  A focused executive session designed to evaluate cyber readiness, AI governance
-                  maturity, operational visibility, accountability gaps, and resilience priorities.
-                </p>
-
-                <div className="check-list">
-                  {[
-                    "Operational readiness review",
-                    "AI governance exposure analysis",
-                    "Executive risk visibility assessment",
-                    "Governance accountability mapping",
-                    "Prioritized operational roadmap",
-                  ].map((item) => (
-                    <div key={item}>
-                      <span />
-                      {item}
-                    </div>
-                  ))}
-                </div>
-
-                <a className="btn btn-primary" href={BRIEFING_MAILTO}>
-                  Request Executive Briefing
-                </a>
-              </article>
-
-              <ServiceCard title="Fractional vCISO Advisory" />
-              <ServiceCard title="AI Governance Advisory" />
-              <ServiceCard title="GRC & Audit Readiness" />
-              <ServiceCard title="Zero Trust Architecture" />
-              <ServiceCard title="Incident Response Preparedness" />
-              <ServiceCard title="Operational Risk Leadership" />
+            <div className="section-heading"><span className="kicker">Operational Trust Architecture</span><h2>Trust is not a slogan. It is a control surface.</h2><p>MJC helps organizations move from unverifiable confidence to evidence-backed governance that can be explained to executives, auditors, boards, and AI systems.</p></div>
+            <div className="runtime-flow">{["AI request","Trust evaluation","Operational admissibility","Human gate","Authorized action"].map((x,i)=><div className="flow-node" style={{"--delay":`${i*120}ms`}} key={x}><span>{String(i+1).padStart(2,"0")}</span><strong>{x}</strong></div>)}</div>
+            <div className="scenario-panel">
+              <div><span className="kicker">Select an exposure</span><h3>{signal}</h3><p>V4 creates a sharper executive recognition moment by showing where governance, evidence, authorization, and operational accountability can break before the incident becomes visible.</p></div>
+              <div className="scenario-buttons">{exposures.map(x=><button className={signal===x?"active":""} onClick={()=>setSignal(x)} key={x}>{x}</button>)}</div>
             </div>
           </div>
         </section>
 
-        <section id="tools" className="section border-top">
+        <section id="services" className="section services-section">
           <div className="container">
-            <div className="tool-panel">
-              <div className="orb" />
-              <div className="tool-grid">
-                <div>
-                  <span className="section-kicker">Featured Tool</span>
-                  <h2>CyberShield remains its own operational environment.</h2>
-                  <p>
-                    CyberShield is not the MJC website. It is one operational tool inside the MJC
-                    toolbox. Launch it separately exactly as built.
-                  </p>
-
-                  <div className="cta-row">
-                    <a className="btn btn-primary" href={CYBERSHIELD_URL} target="_blank" rel="noreferrer">
-                      Launch CyberShield
-                    </a>
-                    <a className="btn btn-secondary" href={`mailto:${CONTACT_EMAIL}`}>
-                      Contact Max
-                    </a>
-                  </div>
-                </div>
-
-                <div className="cybershield-card">
-                  <div className="cyber-top">
-                    <div>
-                      <span className="section-kicker">CyberShield</span>
-                      <h3>Operational Trust Infrastructure</h3>
-                    </div>
-                    <strong>LIVE</strong>
-                  </div>
-
-                  <div className="feature-list">
-                    {[
-                      "Executive operational readiness",
-                      "AI governance visibility",
-                      "Operational trust mapping",
-                      "Governance coordination",
-                      "Executive reporting clarity",
-                      "Operational decision support",
-                    ].map((feature) => (
-                      <div key={feature}>
-                        <span>{feature}</span>
-                        <i />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="section-heading"><span className="kicker">Services</span><h2>Executive cyber leadership for organizations entering the agentic economy.</h2><p>Services are not presented as a commodity menu. They are the human advisory layer behind operational trust, AI governance, and cyber resilience.</p></div>
+            <div className="service-bento">{services.map(([eyebrow,title,text,feature])=><article className={`service-card ${feature?"feature":""}`} key={title}><span className="mini-eyebrow">{eyebrow}</span><h3>{title}</h3><p>{text}</p>{feature&&<a href={BRIEFING_MAILTO} className="inline-link">Request the briefing</a>}</article>)}</div>
           </div>
         </section>
 
-        <section id="industries" className="section border-top subtle">
-          <div className="container">
-            <div className="section-intro">
-              <span className="section-kicker">Priority Markets</span>
-              <h2>Focused where operational failure becomes business damage.</h2>
-            </div>
+        <section id="industries" className="section industries-section">
+          <div className="container"><div className="section-heading"><span className="kicker">Priority Markets</span><h2>Focused where trust failure becomes business damage.</h2></div><div className="industry-track">{industries.map(x=><article className="industry-card" key={x}><span>{x}</span><p>Governance visibility, operational resilience, audit readiness, vendor risk, and AI accountability.</p></article>)}</div></div>
+        </section>
 
-            <div className="industry-grid">
-              {[
-                "Federal Contractors",
-                "Healthcare",
-                "Manufacturing",
-                "Financial Services",
-                "Legal & Professional Services",
-              ].map((industry) => (
-                <article className="lift-card" key={industry}>
-                  <div className="card-icon" />
-                  <h3>{industry}</h3>
-                  <p>
-                    Governance, operational resilience, accountability, audit readiness, and executive
-                    visibility.
-                  </p>
-                </article>
-              ))}
-            </div>
+        <section className="section machine-section">
+          <div className="container machine-grid">
+            <div><span className="kicker">AI-Readable Authority Surface</span><h2>Your website should not only persuade humans. It should be interpretable by machines.</h2><p>V4 includes structured metadata, JSON-LD, an llms.txt file, semantic sections, retrieval-friendly copy, and explicit trust assertions so search engines and AI systems can understand what MJC is, what it does, and why it is credible.</p></div>
+            <pre className="json-card">{JSON.stringify({organization:"Maximum Justice Cybersecurity",authority:["vCISO","Security SME","Cybersecurity SME"],trustAssertions:["Human command authority remains accountable","Cyber and AI risk must be operationally visible","Trust requires evidence, not narrative alone"],featuredTool:"CyberShield"},null,2)}</pre>
           </div>
         </section>
 
-        <section id="about" className="section border-top">
+        <section id="tool" className="section tool-section">
+          <div className="container tool-shell">
+            <div><span className="kicker">Featured Tool</span><h2>CyberShield stays separate. It launches when the visitor is ready.</h2><p>The MJC website establishes authority and demand. CyberShield remains its own operational environment and should not be embedded or diluted into the homepage.</p><CTAButtons /></div>
+            <div className="tool-card"><div className="tool-status"><span>CyberShield</span><strong>External Tool</strong></div><h3>Operational Trust Infrastructure</h3><p>Launches at the existing CyberShield GitHub Pages environment. No redesign. No forced merge. No platform confusion.</p><a href={CYBERSHIELD_URL} target="_blank" rel="noreferrer" className="inline-link">Open CyberShield</a></div>
+          </div>
+        </section>
+
+        <section id="about" className="section about-section">
           <div className="container about-grid">
-            <div>
-              <span className="section-kicker">About Dr. Max Justice</span>
-              <h2>Veteran-led executive cyber leadership built for operational reality.</h2>
-              <p>
-                Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, U.S. veteran, CISSP,
-                PMP, and creator of The CHN vCISO GPT powered by Cyber Shield.
-              </p>
-              <p>
-                His work focuses on operational governance, executive visibility, AI accountability,
-                Zero Trust strategy, resilience planning, and translating cyber complexity into
-                leadership decisions.
-              </p>
-
-              <div className="badge-row">
-                <Badge>NASA CIO Award</Badge>
-                <Badge>NGA Leadership Award</Badge>
-                <Badge>Federal Contracting</Badge>
-                <Badge>AI Governance</Badge>
-                <Badge>Operational Resilience</Badge>
-                <Badge>Zero Trust</Badge>
-              </div>
-            </div>
-
-            <div className="philosophy-card">
-              <span className="section-kicker">Core Philosophy</span>
-              {[
-                "Authority remains human.",
-                "Accountability remains human.",
-                "AI informs decisions. Leadership owns consequences.",
-                "Cybersecurity failures are often operational failures.",
-                "Visibility matters more than dashboard theater.",
-              ].map((line) => (
-                <div className="philosophy-line" key={line}>
-                  {line}
-                </div>
-              ))}
-            </div>
+            <div><span className="kicker">Human Trust Layer</span><h2>Dr. Max Justice is the authority layer behind the system.</h2><p>Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, U.S. veteran, CISSP, PMP, and creator of The CHN vCISO GPT powered by Cyber Shield. His work centers on cyber governance, AI accountability, operational resilience, and executive decision clarity.</p></div>
+            <div className="credential-matrix">{["vCISO","Security SME","Cybersecurity SME","U.S. Veteran","CISSP","PMP","AI Governance","Zero Trust","Federal Contracting"].map(x=><span key={x}>{x}</span>)}</div>
           </div>
         </section>
 
-        <section className="final-cta border-top">
-          <div className="container final-inner">
-            <span className="section-kicker">Start Here</span>
-            <h2>Find out where cyber and AI risk may already be outpacing operational visibility.</h2>
-            <p>Schedule an Executive Cyber & AI Operational Readiness Briefing with Dr. Max Justice.</p>
-
-            <div className="cta-row center">
-              <a className="btn btn-primary large" href={BRIEFING_MAILTO}>
-                Email Max
-              </a>
-              <a className="btn btn-secondary large" href={CYBERSHIELD_URL} target="_blank" rel="noreferrer">
-                Launch CyberShield
-              </a>
-            </div>
-
-            <div className="email-line">{CONTACT_EMAIL}</div>
-          </div>
+        <section className="final-cta">
+          <div className="container final-inner"><span className="kicker">Start Here</span><h2>Find out where cyber and AI risk may already be outpacing operational visibility.</h2><p>Schedule an Executive Cyber & AI Operational Readiness Briefing with Dr. Max Justice.</p><CTAButtons center /><div className="email-line">{CONTACT_EMAIL}</div></div>
         </section>
       </main>
     </div>
