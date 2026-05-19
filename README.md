@@ -1,21 +1,38 @@
-# MJC TrustMap Foreground Fix
+# MJC Website VNext
 
-Focused update based on topology feedback.
+Executive Operational Visibility build for Maximum Justice Cybersecurity.
 
-## Changes
+## Core strategic truth
 
-- Idle TrustMap is compact, centered, and clean
-- Idle state only says TrustMap
-- Connector lines feed into the TrustMap center
-- TrustMap no longer feels buried behind signal nodes
-- On node hover, TrustMap expands and comes forward above the topology
-- Hover state reveals the contextual intelligence panel from the center
-- Nodes remain stable and do not dodge the cursor
-- Cloud and Executive remain clickable without shifting away
+Most organizations already operate with more cyber and AI risk than leadership can clearly see.
 
-## Deploy
+## Local run
 
-Copy all files into the root of your `mjc-site` repo, commit, and push to `main`.
+```bash
+npm install
+npm run dev
+```
 
-Expected URL:
-https://maximumjusticecybersecurity.github.io/mjc-site/
+## Build
+
+```bash
+npm run build
+```
+
+## GitHub Pages
+
+This package is configured for the `mjc-site` repository.
+
+Important Vite setting:
+
+```js
+base: '/mjc-site/'
+```
+
+Do not remove that line or GitHub Pages may deploy a blank screen.
+
+## Primary links
+
+- CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
+- Calendly: https://calendly.com/maxjustice
+- Contact: max@maximumjusticecybersecurity.com
