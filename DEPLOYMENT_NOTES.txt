@@ -1,8 +1,0 @@
-Upload all files into mjc-site repo root.
-
-Then:
-1. Commit to main
-2. Let GitHub Actions deploy
-3. Open https://maximumjusticecybersecurity.github.io/mjc-site/
-
-This build fixes the Operational Topology TrustMap foreground behavior.
