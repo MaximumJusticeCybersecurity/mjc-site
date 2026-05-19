@@ -1,15 +1,8 @@
-MJC Interaction Refinement Build
-
-Upload all files and folders into the root of your mjc-site repository.
+Upload all files into mjc-site repo root.
 
 Then:
 1. Commit to main
-2. Wait for GitHub Actions to deploy
-3. Confirm green check
-4. Open https://maximumjusticecybersecurity.github.io/mjc-site/
+2. Let GitHub Actions deploy
+3. Open https://maximumjusticecybersecurity.github.io/mjc-site/
 
-Changes:
-- Stable topology nodes
-- TrustMap center hover intelligence
-- Interactive TrustMap output tiles
-- Improved TrustMap Briefing CTA flow
+This build fixes the Operational Topology TrustMap foreground behavior.

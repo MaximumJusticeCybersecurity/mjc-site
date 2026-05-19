@@ -237,39 +237,77 @@ p { color: var(--muted); font-size: 1.08rem; }
   border: 1px solid #d8e8ef;
   border-radius: 26px;
   background:
-    radial-gradient(circle at center, rgba(34,184,214,.16), transparent 38%),
+    radial-gradient(circle at center, rgba(34,184,214,.13), transparent 39%),
     linear-gradient(135deg, #f8fcff, #e9f5fa);
   overflow: hidden;
+}
+
+/* Connector layer sits behind nodes and behind the idle TrustMap */
+.connector {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(31,111,159,.35), rgba(31,111,159,.08));
+  transform-origin: left center;
+  z-index: 2;
+  animation: connectorPulse 2.8s ease-in-out infinite;
+}
+
+.connector-ai { transform: rotate(224deg); }
+.connector-cloud { transform: rotate(270deg); }
+.connector-vendor { transform: rotate(315deg); }
+.connector-evidence { transform: rotate(180deg); }
+.connector-owner { transform: rotate(0deg); }
+.connector-data { transform: rotate(142deg); }
+.connector-policy { transform: rotate(38deg); }
+.connector-exec { transform: rotate(90deg); }
+
+@keyframes connectorPulse {
+  0%, 100% { opacity: .32; }
+  50% { opacity: .82; }
 }
 
 .topologyCenter {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 142px;
-  min-height: 142px;
+  width: 116px;
+  min-height: 116px;
   transform: translate(-50%, -50%);
   display: grid;
+  place-items: center;
   align-content: center;
   gap: 6px;
-  padding: 15px;
+  padding: 14px;
   text-align: center;
-  border-radius: 32px;
+  border-radius: 30px;
   background: var(--navy);
   color: white;
   box-shadow: 0 18px 50px rgba(16,34,53,.22);
-  z-index: 7;
-  transition: width .18s ease, min-height .18s ease, border-radius .18s ease, background .18s ease;
+  z-index: 6;
+  transition: width .2s ease, min-height .2s ease, border-radius .2s ease, background .2s ease, z-index .2s ease, box-shadow .2s ease;
 }
 
 .topologyCenter.expanded {
-  width: min(310px, 72%);
-  min-height: 210px;
+  width: min(330px, 76%);
+  min-height: 230px;
   border-radius: 26px;
   background: linear-gradient(135deg, var(--navy), var(--navy2));
+  z-index: 30;
+  box-shadow: 0 30px 90px rgba(16,34,53,.28);
 }
 
-.topologyCenter span {
+.idleTrustMap {
+  color: white !important;
+  text-transform: none !important;
+  letter-spacing: -.02em !important;
+  font-size: 1.2rem !important;
+  font-weight: 950 !important;
+}
+
+.topologyCenter span:not(.idleTrustMap) {
   color: var(--cyan);
   text-transform: uppercase;
   letter-spacing: .13em;
@@ -292,7 +330,7 @@ p { color: var(--muted); font-size: 1.08rem; }
 
 .topologyNode {
   position: absolute;
-  z-index: 10;
+  z-index: 12;
   padding: 10px 13px;
   border-radius: 999px;
   border: 1px solid rgba(31,111,159,.28);
@@ -312,37 +350,16 @@ p { color: var(--muted); font-size: 1.08rem; }
 
 /* Fixed stable positions. No translate-hover dodge behavior. */
 .ai { top: 34px; left: 38px; }
+.cloud { left: 50%; top: 30px; transform: translateX(-50%); }
 .vendor { top: 52px; right: 34px; }
 .evidence { left: 34px; top: 156px; }
 .owner { right: 26px; top: 172px; }
 .data { bottom: 54px; left: 52px; }
 .policy { bottom: 38px; right: 54px; }
-.cloud { left: 50%; top: 30px; transform: translateX(-50%); }
 .exec { left: 50%; bottom: 26px; transform: translateX(-50%); }
 
 .cloud:hover, .cloud:focus, .exec:hover, .exec:focus {
   transform: translateX(-50%);
-}
-
-.line {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 68%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(31,111,159,.35), transparent);
-  transform-origin: center;
-  animation: pulseLine 2.8s ease-in-out infinite;
-}
-
-.line1 { transform: translate(-50%, -50%) rotate(0deg); }
-.line2 { transform: translate(-50%, -50%) rotate(45deg); animation-delay: .4s; }
-.line3 { transform: translate(-50%, -50%) rotate(90deg); animation-delay: .8s; }
-.line4 { transform: translate(-50%, -50%) rotate(135deg); animation-delay: 1.2s; }
-
-@keyframes pulseLine {
-  0%, 100% { opacity: .25; }
-  50% { opacity: .8; }
 }
 
 .microcopy {
@@ -653,14 +670,14 @@ p { color: var(--muted); font-size: 1.08rem; }
   .topology { min-height: 360px; }
 
   .topologyCenter {
-    width: 118px;
-    min-height: 118px;
+    width: 106px;
+    min-height: 106px;
     border-radius: 26px;
   }
 
   .topologyCenter.expanded {
-    width: min(270px, 78%);
-    min-height: 210px;
+    width: min(282px, 80%);
+    min-height: 220px;
   }
 
   .contrastGrid, .reportList, .heatGrid, .serviceGrid {

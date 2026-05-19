@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import "./styles.css";
 
 const CYBERSHIELD_URL = "https://maximumjusticecybersecurity.github.io/CyberShield/";
@@ -55,8 +55,8 @@ const topologyIntel = {
   },
   TrustMap: {
     title: "TrustMap",
-    text: "Hover a node to see what that operational signal means.  TrustMap turns scattered signals into executive visibility.",
-    consequence: "The goal is not more data.  The goal is clearer decisions.",
+    text: "",
+    consequence: "",
   },
 };
 
@@ -163,61 +163,35 @@ const services = {
       "TrustMap heat preview",
       "Prioritized next actions",
     ],
-    primaryCta: "Generate Your TrustMap",
   },
   "Fractional vCISO": {
     label: "Service",
     summary: "Executive cybersecurity leadership without full-time CISO overhead.",
-    bullets: [
-      "Security strategy and governance cadence",
-      "Board and executive reporting",
-      "MSP and vendor oversight",
-      "Policy ownership and risk prioritization",
-    ],
+    bullets: ["Security strategy and governance cadence", "Board and executive reporting", "MSP and vendor oversight", "Policy ownership and risk prioritization"],
     receives: ["Governance cadence", "Executive reporting", "Risk prioritization", "Vendor oversight"],
   },
   "AI Governance": {
     label: "Service",
     summary: "Human-command AI governance for organizations adopting AI faster than policy can keep up.",
-    bullets: [
-      "AI use inventory and governance policy",
-      "Decision authority and approval gates",
-      "Data handling and accountability rules",
-      "Evidence and auditability expectations",
-    ],
+    bullets: ["AI use inventory and governance policy", "Decision authority and approval gates", "Data handling and accountability rules", "Evidence and auditability expectations"],
     receives: ["AI use inventory", "Approval model", "Policy guardrails", "Evidence expectations"],
   },
   "Audit Readiness": {
     label: "Service",
     summary: "Evidence discipline for CMMC, NIST, HIPAA, customer reviews, cyber insurance, and executive scrutiny.",
-    bullets: [
-      "Control mapping and ownership clarity",
-      "Evidence collection structure",
-      "Remediation tracking",
-      "Executive-ready readiness summaries",
-    ],
+    bullets: ["Control mapping and ownership clarity", "Evidence collection structure", "Remediation tracking", "Executive-ready readiness summaries"],
     receives: ["Control map", "Evidence structure", "Remediation status", "Executive summary"],
   },
   "Zero Trust Architecture": {
     label: "Service",
     summary: "Practical Zero Trust strategy balanced with operational trust and business reality.",
-    bullets: [
-      "Identity and access review",
-      "Privilege and segmentation priorities",
-      "Cloud and Microsoft ecosystem governance",
-      "Architecture roadmap tied to operational risk",
-    ],
+    bullets: ["Identity and access review", "Privilege and segmentation priorities", "Cloud and Microsoft ecosystem governance", "Architecture roadmap tied to operational risk"],
     receives: ["Identity review", "Access priorities", "Cloud governance", "Architecture roadmap"],
   },
   "Incident Preparedness": {
     label: "Service",
     summary: "Prepare leadership to make calm, fast decisions before pressure arrives.",
-    bullets: [
-      "Executive tabletop exercises",
-      "Escalation authority mapping",
-      "Ransomware and vendor outage scenarios",
-      "Communication and continuity readiness",
-    ],
+    bullets: ["Executive tabletop exercises", "Escalation authority mapping", "Ransomware and vendor outage scenarios", "Communication and continuity readiness"],
     receives: ["Tabletop scenario", "Escalation map", "Communication path", "Continuity priorities"],
   },
 };
@@ -252,12 +226,12 @@ const industries = {
 
 const topologyNodes = [
   ["AI", "topologyNode ai"],
+  ["Cloud", "topologyNode cloud"],
   ["Vendors", "topologyNode vendor"],
   ["Evidence", "topologyNode evidence"],
   ["Ownership", "topologyNode owner"],
   ["Data", "topologyNode data"],
   ["Policy", "topologyNode policy"],
-  ["Cloud", "topologyNode cloud"],
   ["Executive", "topologyNode exec"],
 ];
 
@@ -369,11 +343,26 @@ export default function App() {
                 <b>Responsive</b>
               </div>
 
-              <div className="topology" onMouseLeave={() => setActiveNode("TrustMap")}>
+              <div className={`topology ${activeNode !== "TrustMap" ? "is-hovering" : ""}`} onMouseLeave={() => setActiveNode("TrustMap")}>
+                <div className="connector connector-ai" />
+                <div className="connector connector-cloud" />
+                <div className="connector connector-vendor" />
+                <div className="connector connector-evidence" />
+                <div className="connector connector-owner" />
+                <div className="connector connector-data" />
+                <div className="connector connector-policy" />
+                <div className="connector connector-exec" />
+
                 <div className={`topologyCenter ${activeNode !== "TrustMap" ? "expanded" : ""}`}>
-                  <span>{nodeIntel.title}</span>
-                  <p>{nodeIntel.text}</p>
-                  <strong>{nodeIntel.consequence}</strong>
+                  {activeNode === "TrustMap" ? (
+                    <span className="idleTrustMap">TrustMap</span>
+                  ) : (
+                    <>
+                      <span>{nodeIntel.title}</span>
+                      <p>{nodeIntel.text}</p>
+                      <strong>{nodeIntel.consequence}</strong>
+                    </>
+                  )}
                 </div>
 
                 {topologyNodes.map(([label, className]) => (
@@ -387,14 +376,10 @@ export default function App() {
                     {label}
                   </button>
                 ))}
-                <div className="line line1" />
-                <div className="line line2" />
-                <div className="line line3" />
-                <div className="line line4" />
               </div>
 
               <p className="microcopy">
-                Hover reveals meaning.  Click updates the visibility picture.
+                Idle state centers TrustMap.  Hover brings TrustMap forward as the interpretation layer.
               </p>
             </aside>
           </div>

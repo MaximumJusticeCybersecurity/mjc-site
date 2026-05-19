@@ -1,33 +1,21 @@
-# MJC Executive Visibility / TrustMap Interaction Refinement
+# MJC TrustMap Foreground Fix
 
-This package refines the latest MJC website based on interaction feedback.
+Focused update based on topology feedback.
 
-## Key Fixes
+## Changes
 
-- Operational Topology no longer behaves like a game or dodges clicks
-- Executive and Cloud nodes no longer shift away from the cursor
-- Hovering each topology node updates the TrustMap center with contextual intelligence
-- Clicking topology nodes still updates the visibility picture
-- TrustMap output tiles are interactive
-- Visibility Score, Exposure Zones, Ownership Gaps, Evidence Confidence, AI Governance Signals, and Expert-Validated Next Actions all explain their meaning
-- TrustMap Briefing modal now includes a primary “Generate Your TrustMap” CTA before “Discuss this service”
-- CyberShield remains separate and launches externally
-- Calendly remains wired for executive briefing
-- Vite GitHub Pages base remains `/mjc-site/`
+- Idle TrustMap is compact, centered, and clean
+- Idle state only says TrustMap
+- Connector lines feed into the TrustMap center
+- TrustMap no longer feels buried behind signal nodes
+- On node hover, TrustMap expands and comes forward above the topology
+- Hover state reveals the contextual intelligence panel from the center
+- Nodes remain stable and do not dodge the cursor
+- Cloud and Executive remain clickable without shifting away
 
 ## Deploy
 
-Copy every file and folder into the root of the `mjc-site` repo, commit, and push to `main`.
+Copy all files into the root of your `mjc-site` repo, commit, and push to `main`.
 
-GitHub Actions should deploy automatically.
-
-## Links
-
-MJC Site:
+Expected URL:
 https://maximumjusticecybersecurity.github.io/mjc-site/
-
-CyberShield:
-https://maximumjusticecybersecurity.github.io/CyberShield/
-
-Calendly:
-https://calendly.com/maxjustice

@@ -1,4 +1,4 @@
-name: Deploy MJC Interaction Refinement Site to GitHub Pages
+name: Deploy MJC TrustMap Foreground Fix to GitHub Pages
 
 on:
   push:
