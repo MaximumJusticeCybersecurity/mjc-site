@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://maximumjusticecybersecurity.github.io/mjc-site/sitemap.xml
