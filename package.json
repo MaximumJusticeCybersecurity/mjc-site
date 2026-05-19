@@ -8,10 +8,7 @@
     "@vitejs/plugin-react": "latest",
     "vite": "latest",
     "react": "latest",
-    "react-dom": "latest",
-    "lucide-react": "latest",
-    "framer-motion": "latest",
-    "recharts": "latest"
+    "react-dom": "latest"
   },
   "devDependencies": {}
 }

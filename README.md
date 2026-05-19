@@ -1,58 +1,30 @@
-# MJC Website V4
+# MJC Website V5
 
-This is the MJC Website V4 build.
+This version corrects the V4 feedback.
 
-## Architecture
+Key changes:
+- Removes internal version language from visitor-facing copy
+- Uses a cleaner trust-oriented palette instead of heavy cyberpunk darkness
+- Uses the MJC logo path: public/mjc-logo.png
+- Adds meaningful clickable service cards
+- Adds meaningful clickable industry panels
+- Adds meaningful clickable trust-flow steps
+- Adds exposure selection that changes consequence, signal, and action context
+- Keeps CyberShield separate as an outbound tool
+- Includes vite.config.js for GitHub Pages under /mjc-site/
+- Includes GitHub Actions deployment workflow
 
-MJC Website V4 is the parent authority site for Maximum Justice Cybersecurity.
+## Logo
 
-CyberShield is not embedded. It remains a separate tool and launches here:
+Place your logo file here:
 
-https://maximumjusticecybersecurity.github.io/CyberShield/
+public/mjc-logo.png
 
-## Key Design Direction
+The site will automatically use it in the header.
 
-- Modern, high-conversion executive site
-- AI-native trust positioning
-- Machine-readable authority surface
-- Operational trust narrative
-- vCISO, Security SME, Cybersecurity SME credibility
-- CyberShield as a separate featured tool
-- Executive briefing as primary conversion
+## Deploy
 
-## Deployment
-
-This package includes:
-
-- React/Vite source
-- vite.config.js with the correct GitHub Pages base
-- GitHub Actions deploy workflow
-- JSON-LD metadata in index.html
-- public/llms.txt
-- public/robots.txt
-- public/sitemap.xml
-
-## Local Run
-
-```bash
-npm install
-npm run dev
-```
-
-## Build
-
-```bash
-npm run build
-```
-
-## GitHub Pages
-
-Push to the `main` branch. The included GitHub Actions workflow deploys the site to GitHub Pages.
+Copy all files into the mjc-site repo root, commit, and push to main.
 
 Expected URL:
-
 https://maximumjusticecybersecurity.github.io/mjc-site/
-
-## Contact
-
-max@maximumjusticecybersecurity.com
