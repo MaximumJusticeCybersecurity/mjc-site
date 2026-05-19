@@ -12,26 +12,111 @@ const hoverCopy = {
   "Built for trust": "Trust is evaluated through visibility, accountability, evidence, governance, and operational consequence.",
 };
 
+const topologyIntel = {
+  AI: {
+    title: "AI",
+    text: "AI visibility shows where automated tools influence decisions, data handling, workflows, and accountability before governance catches up.",
+    consequence: "Unmapped AI use creates invisible decision risk.",
+  },
+  Vendors: {
+    title: "Vendors",
+    text: "Vendor visibility shows which third parties can disrupt operations, touch sensitive data, or weaken compliance confidence.",
+    consequence: "Critical vendors often create risk outside executive awareness.",
+  },
+  Evidence: {
+    title: "Evidence",
+    text: "Evidence visibility shows whether policies, controls, reviews, and remediation can be defended when customers, auditors, insurers, or regulators ask.",
+    consequence: "Controls without evidence create false confidence.",
+  },
+  Ownership: {
+    title: "Ownership",
+    text: "Ownership visibility shows who is accountable before pressure arrives, who approves action, and who owns remediation.",
+    consequence: "Unclear ownership delays action when time matters.",
+  },
+  Data: {
+    title: "Data",
+    text: "Data visibility shows where critical information flows, who accesses it, which vendors touch it, and whether AI systems interact with it.",
+    consequence: "Data movement without visibility becomes trust erosion.",
+  },
+  Policy: {
+    title: "Policy",
+    text: "Policy visibility shows whether governance is intentional, current, enforceable, and tied to actual operational behavior.",
+    consequence: "Policy that is not operationalized becomes paperwork.",
+  },
+  Cloud: {
+    title: "Cloud",
+    text: "Cloud visibility shows identity, access, configuration, vendor dependency, and operational exposure across modern infrastructure.",
+    consequence: "Cloud complexity hides privilege, data, and continuity risk.",
+  },
+  Executive: {
+    title: "Executive",
+    text: "Executive visibility shows whether leadership can see consequence, ownership, escalation priority, and decision context clearly enough to act.",
+    consequence: "Executives do not need more activity.  They need decision intelligence.",
+  },
+  TrustMap: {
+    title: "TrustMap",
+    text: "Hover a node to see what that operational signal means.  TrustMap turns scattered signals into executive visibility.",
+    consequence: "The goal is not more data.  The goal is clearer decisions.",
+  },
+};
+
 const visibilityStates = {
   "AI Decisions": {
     without: "AI workflows spread before policy, ownership, or evidence expectations are defined.",
     with: "AI usage is mapped to owners, approval paths, data handling rules, and executive visibility.",
+    consequence: "Leadership may believe AI adoption is informal while sensitive workflows are already operational.",
     heat: [88, 71, 64, 82],
   },
   "Vendor Risk": {
     without: "Critical vendors create hidden operating dependencies that leadership may not see until disruption.",
     with: "Vendor exposure is mapped by operational consequence, not contract size or annual spend.",
+    consequence: "Vendor failure can create business disruption even when internal systems appear stable.",
     heat: [72, 90, 66, 78],
   },
   "Audit Evidence": {
     without: "Controls exist, but proof is scattered, stale, or disconnected from accountable owners.",
     with: "Evidence is organized by control, owner, confidence, status, and executive priority.",
+    consequence: "Audit pressure exposes the gap between belief and defensible proof.",
     heat: [61, 70, 93, 69],
   },
   "Executive Reporting": {
     without: "Leadership gets activity dashboards instead of operational decision intelligence.",
     with: "Reporting converts cyber, AI, and governance signals into visibility, consequence, and action.",
+    consequence: "Executives can be informed and still lack the visibility needed to act.",
     heat: [84, 58, 72, 91],
+  },
+};
+
+const trustMapOutputs = {
+  "Visibility Score": {
+    title: "Visibility Score",
+    text: "Measures how clearly leadership can observe operational dependencies, AI usage, vendor exposure, governance ownership, escalation paths, and evidence maturity.",
+    action: "Use this to determine where leadership is operating with confidence versus assumption.",
+  },
+  "Exposure Zones": {
+    title: "Exposure Zones",
+    text: "Identifies areas where cyber, AI, vendor, data, or governance conditions could create operational disruption or trust damage.",
+    action: "Use this to focus attention on what can create consequence, not what merely creates noise.",
+  },
+  "Ownership Gaps": {
+    title: "Ownership Gaps",
+    text: "Highlights where accountability is fragmented, escalation authority is unclear, or operational responsibility diffuses across teams.",
+    action: "Use this to clarify who owns decisions before pressure arrives.",
+  },
+  "Evidence Confidence": {
+    title: "Evidence Confidence",
+    text: "Shows whether the organization can defend policies, controls, reviews, and remediation status under customer, audit, insurance, or regulatory scrutiny.",
+    action: "Use this to close the gap between claimed readiness and defensible proof.",
+  },
+  "AI Governance Signals": {
+    title: "AI Governance Signals",
+    text: "Reveals where AI tools, workflows, data handling, and decision influence may be outpacing governance, policy, and executive oversight.",
+    action: "Use this to preserve human accountability as AI enters operations.",
+  },
+  "Expert-Validated Next Actions": {
+    title: "Expert-Validated Next Actions",
+    text: "CyberShield creates the first-pass analysis.  Dr. Max Justice validates and sharpens the final priorities through operational and governance judgment.",
+    action: "Use this to move from automated output to executive-grade interpretation.",
   },
 };
 
@@ -72,6 +157,13 @@ const services = {
       "Output focuses on visibility, ownership, evidence, consequence, and next action",
       "Designed for CEOs, owners, boards, and executive teams",
     ],
+    receives: [
+      "Operational visibility snapshot",
+      "Top executive blind spots",
+      "TrustMap heat preview",
+      "Prioritized next actions",
+    ],
+    primaryCta: "Generate Your TrustMap",
   },
   "Fractional vCISO": {
     label: "Service",
@@ -82,6 +174,7 @@ const services = {
       "MSP and vendor oversight",
       "Policy ownership and risk prioritization",
     ],
+    receives: ["Governance cadence", "Executive reporting", "Risk prioritization", "Vendor oversight"],
   },
   "AI Governance": {
     label: "Service",
@@ -92,6 +185,7 @@ const services = {
       "Data handling and accountability rules",
       "Evidence and auditability expectations",
     ],
+    receives: ["AI use inventory", "Approval model", "Policy guardrails", "Evidence expectations"],
   },
   "Audit Readiness": {
     label: "Service",
@@ -102,6 +196,7 @@ const services = {
       "Remediation tracking",
       "Executive-ready readiness summaries",
     ],
+    receives: ["Control map", "Evidence structure", "Remediation status", "Executive summary"],
   },
   "Zero Trust Architecture": {
     label: "Service",
@@ -112,6 +207,7 @@ const services = {
       "Cloud and Microsoft ecosystem governance",
       "Architecture roadmap tied to operational risk",
     ],
+    receives: ["Identity review", "Access priorities", "Cloud governance", "Architecture roadmap"],
   },
   "Incident Preparedness": {
     label: "Service",
@@ -122,6 +218,7 @@ const services = {
       "Ransomware and vendor outage scenarios",
       "Communication and continuity readiness",
     ],
+    receives: ["Tabletop scenario", "Escalation map", "Communication path", "Continuity priorities"],
   },
 };
 
@@ -222,19 +319,21 @@ export default function App() {
   const [scenario, setScenario] = useState("AI Procurement");
   const [industry, setIndustry] = useState("Federal Contractors");
   const [service, setService] = useState(null);
+  const [activeNode, setActiveNode] = useState("TrustMap");
+  const [activeOutput, setActiveOutput] = useState("Visibility Score");
 
   const visibility = visibilityStates[state];
   const activeScenario = scenarios[scenario];
   const activeIndustry = industries[industry];
+  const nodeIntel = topologyIntel[activeNode] || topologyIntel.TrustMap;
+  const outputIntel = trustMapOutputs[activeOutput];
 
-  const trustMapOutputs = useMemo(() => [
-    "Visibility Score",
-    "Exposure Zones",
-    "Ownership Gaps",
-    "Evidence Confidence",
-    "AI Governance Signals",
-    "Expert-Validated Next Actions",
-  ], []);
+  const nodeToState = (label) => {
+    if (label === "Vendors") return "Vendor Risk";
+    if (label === "Evidence") return "Audit Evidence";
+    if (label === "Executive") return "Executive Reporting";
+    return "AI Decisions";
+  };
 
   return (
     <div className="site" id="top">
@@ -265,15 +364,26 @@ export default function App() {
               <div className="cardTop">
                 <div>
                   <span>Operational Topology</span>
-                  <strong>What leadership cannot afford to miss</strong>
+                  <strong>Hover a signal to reveal meaning</strong>
                 </div>
-                <b>Interactive</b>
+                <b>Responsive</b>
               </div>
 
-              <div className="topology">
-                <div className="topologyCenter">TrustMap</div>
+              <div className="topology" onMouseLeave={() => setActiveNode("TrustMap")}>
+                <div className={`topologyCenter ${activeNode !== "TrustMap" ? "expanded" : ""}`}>
+                  <span>{nodeIntel.title}</span>
+                  <p>{nodeIntel.text}</p>
+                  <strong>{nodeIntel.consequence}</strong>
+                </div>
+
                 {topologyNodes.map(([label, className]) => (
-                  <button key={label} className={className} onClick={() => setState(label === "Vendors" ? "Vendor Risk" : label === "Evidence" ? "Audit Evidence" : label === "Executive" ? "Executive Reporting" : "AI Decisions")}>
+                  <button
+                    key={label}
+                    className={className}
+                    onMouseEnter={() => setActiveNode(label)}
+                    onFocus={() => setActiveNode(label)}
+                    onClick={() => setState(nodeToState(label))}
+                  >
                     {label}
                   </button>
                 ))}
@@ -284,7 +394,7 @@ export default function App() {
               </div>
 
               <p className="microcopy">
-                Click the topology nodes.  Each signal changes the visibility picture.
+                Hover reveals meaning.  Click updates the visibility picture.
               </p>
             </aside>
           </div>
@@ -326,8 +436,24 @@ export default function App() {
               <p>
                 CyberShield generates the first pass.  Dr. Max Justice validates and sharpens the output so the final TrustMap is built for executive decisions, not marketing theater.
               </p>
+
               <div className="reportList">
-                {trustMapOutputs.map((item) => <span key={item}>{item}</span>)}
+                {Object.keys(trustMapOutputs).map((item) => (
+                  <button
+                    key={item}
+                    className={activeOutput === item ? "active" : ""}
+                    onClick={() => setActiveOutput(item)}
+                    onMouseEnter={() => setActiveOutput(item)}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+
+              <div className="outputExplainer">
+                <span>{outputIntel.title}</span>
+                <p>{outputIntel.text}</p>
+                <strong>{outputIntel.action}</strong>
               </div>
             </div>
 
@@ -352,7 +478,7 @@ export default function App() {
               <span className="eyebrow">Executive scenarios</span>
               <h2>Executives remember scenarios, not frameworks.</h2>
               <p>
-                The site now uses operational examples to create recognition.  Recognition is what makes the problem live rent-free.
+                The site uses operational examples to create recognition.  Recognition is what makes the problem live rent-free.
               </p>
               <div className="scenarioButtons">
                 {Object.keys(scenarios).map((key) => (
@@ -463,10 +589,21 @@ export default function App() {
       {service && (
         <Modal title={services[service].title || service} close={() => setService(null)}>
           <p>{services[service].summary}</p>
+
+          <h4>What you receive</h4>
+          <div className="modalChips">
+            {services[service].receives.map((item) => <span key={item}>{item}</span>)}
+          </div>
+
+          <h4>What it covers</h4>
           <ul>
             {services[service].bullets.map((item) => <li key={item}>{item}</li>)}
           </ul>
-          <a className="primary small" href={CALENDLY_URL} target="_blank" rel="noreferrer">Discuss this service</a>
+
+          {service === "TrustMap Briefing" && (
+            <a className="primary small" href={CYBERSHIELD_URL} target="_blank" rel="noreferrer">Generate Your TrustMap</a>
+          )}
+          <a className="secondary small" href={CALENDLY_URL} target="_blank" rel="noreferrer">Discuss this service</a>
         </Modal>
       )}
     </div>

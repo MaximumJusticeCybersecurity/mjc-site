@@ -10,6 +10,10 @@ Most organizations already operate beyond executive visibility.
 
 TrustMap: a semi-automated CyberShield first-pass report followed by expert validation from Dr. Max Justice.
 
+## Interaction Model
+
+Operational topology nodes reveal contextual intelligence. TrustMap output tiles explain visibility score, exposure zones, ownership gaps, evidence confidence, AI governance signals, and expert-validated next actions.
+
 ## Founder
 
 Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, U.S. veteran, CISSP, PMP, and creator of The CHN vCISO GPT powered by Cyber Shield.

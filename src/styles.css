@@ -93,7 +93,7 @@ nav a:hover { color: var(--navy); }
   font-weight: 950;
 }
 
-h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3, h4, p { margin-top: 0; }
 
 h1 {
   max-width: 900px;
@@ -111,6 +111,7 @@ h2 {
 }
 
 h3 { margin-bottom: 14px; font-size: 1.55rem; line-height: 1.08; }
+h4 { margin: 22px 0 10px; font-size: 1rem; }
 
 p { color: var(--muted); font-size: 1.08rem; }
 
@@ -149,7 +150,7 @@ p { color: var(--muted); font-size: 1.08rem; }
 }
 
 .primary:hover, .secondary:hover { transform: translateY(-2px); }
-.small { min-height: 42px; padding: 10px 16px; margin-top: 12px; }
+.small { min-height: 42px; padding: 10px 16px; margin: 12px 10px 0 0; }
 
 .hoverBadge {
   position: relative;
@@ -189,7 +190,7 @@ p { color: var(--muted); font-size: 1.08rem; }
   transform: translateX(-50%) translateY(0);
 }
 
-.topologyCard, .heatPanel, .flowExplainer, .scenarioPanel, .industryPanel, .imagePanel, .calloutGrid, .modal {
+.topologyCard, .heatPanel, .flowExplainer, .scenarioPanel, .industryPanel, .imagePanel, .calloutGrid, .modal, .outputExplainer {
   background: rgba(255,255,255,.9);
   border: 1px solid var(--line);
   border-radius: 30px;
@@ -205,7 +206,7 @@ p { color: var(--muted); font-size: 1.08rem; }
   margin-bottom: 18px;
 }
 
-.cardTop span, .heatTitle span, .scenarioPanel span, .industryPanel span {
+.cardTop span, .heatTitle span, .scenarioPanel span, .industryPanel span, .outputExplainer span {
   display: block;
   color: var(--blue);
   text-transform: uppercase;
@@ -232,7 +233,7 @@ p { color: var(--muted); font-size: 1.08rem; }
 
 .topology {
   position: relative;
-  min-height: 360px;
+  min-height: 380px;
   border: 1px solid #d8e8ef;
   border-radius: 26px;
   background:
@@ -245,22 +246,53 @@ p { color: var(--muted); font-size: 1.08rem; }
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 120px;
-  height: 120px;
+  width: 142px;
+  min-height: 142px;
   transform: translate(-50%, -50%);
   display: grid;
-  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 15px;
+  text-align: center;
   border-radius: 32px;
   background: var(--navy);
   color: white;
-  font-weight: 950;
   box-shadow: 0 18px 50px rgba(16,34,53,.22);
-  z-index: 5;
+  z-index: 7;
+  transition: width .18s ease, min-height .18s ease, border-radius .18s ease, background .18s ease;
+}
+
+.topologyCenter.expanded {
+  width: min(310px, 72%);
+  min-height: 210px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+}
+
+.topologyCenter span {
+  color: var(--cyan);
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.topologyCenter p {
+  margin: 0;
+  color: rgba(255,255,255,.82);
+  font-size: .9rem;
+  line-height: 1.35;
+}
+
+.topologyCenter strong {
+  color: white;
+  font-size: .92rem;
+  line-height: 1.25;
 }
 
 .topologyNode {
   position: absolute;
-  z-index: 8;
+  z-index: 10;
   padding: 10px 13px;
   border-radius: 999px;
   border: 1px solid rgba(31,111,159,.28);
@@ -268,11 +300,17 @@ p { color: var(--muted); font-size: 1.08rem; }
   color: var(--navy);
   font-weight: 900;
   cursor: pointer;
-  transition: transform .18s ease, background .18s ease;
+  transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
-.topologyNode:hover { transform: translateY(-3px); background: #e7f5fb; }
+.topologyNode:hover, .topologyNode:focus {
+  background: #e7f5fb;
+  border-color: rgba(31,111,159,.48);
+  box-shadow: 0 10px 26px rgba(16,34,53,.12);
+  outline: none;
+}
 
+/* Fixed stable positions. No translate-hover dodge behavior. */
 .ai { top: 34px; left: 38px; }
 .vendor { top: 52px; right: 34px; }
 .evidence { left: 34px; top: 156px; }
@@ -281,6 +319,10 @@ p { color: var(--muted); font-size: 1.08rem; }
 .policy { bottom: 38px; right: 54px; }
 .cloud { left: 50%; top: 30px; transform: translateX(-50%); }
 .exec { left: 50%; bottom: 26px; transform: translateX(-50%); }
+
+.cloud:hover, .cloud:focus, .exec:hover, .exec:focus {
+  transform: translateX(-50%);
+}
 
 .line {
   position: absolute;
@@ -403,13 +445,34 @@ p { color: var(--muted); font-size: 1.08rem; }
   margin-top: 26px;
 }
 
-.reportList span {
+.reportList button {
+  cursor: pointer;
+  text-align: left;
   padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: 16px;
   background: white;
   color: var(--navy);
   font-weight: 850;
+}
+
+.reportList button:hover, .reportList button.active {
+  background: #e7f5fb;
+  border-color: rgba(31,111,159,.42);
+}
+
+.outputExplainer {
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: 22px;
+}
+
+.outputExplainer p {
+  margin: 10px 0;
+}
+
+.outputExplainer strong {
+  color: var(--navy);
 }
 
 .heatPanel { padding: 24px; }
@@ -525,7 +588,7 @@ p { color: var(--muted); font-size: 1.08rem; }
 
 .modal {
   position: relative;
-  max-width: 720px;
+  max-width: 740px;
   width: 100%;
   padding: 34px;
 }
@@ -544,6 +607,22 @@ p { color: var(--muted); font-size: 1.08rem; }
 }
 
 .modal li { margin: 8px 0; color: var(--muted); }
+
+.modalChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modalChips span {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #e7f5fb;
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 850;
+}
 
 @media (max-width: 1060px) {
   nav { display: none; }
@@ -571,8 +650,18 @@ p { color: var(--muted); font-size: 1.08rem; }
   h1 { font-size: clamp(3rem, 15vw, 4.8rem); }
   h2 { font-size: clamp(2.15rem, 10vw, 3.6rem); }
 
-  .topology { min-height: 310px; }
-  .topologyCenter { width: 100px; height: 100px; border-radius: 26px; }
+  .topology { min-height: 360px; }
+
+  .topologyCenter {
+    width: 118px;
+    min-height: 118px;
+    border-radius: 26px;
+  }
+
+  .topologyCenter.expanded {
+    width: min(270px, 78%);
+    min-height: 210px;
+  }
 
   .contrastGrid, .reportList, .heatGrid, .serviceGrid {
     grid-template-columns: 1fr;
@@ -587,7 +676,7 @@ p { color: var(--muted); font-size: 1.08rem; }
     transform: translateY(0);
   }
 
-  .topologyCard, .heatPanel, .scenarioPanel, .industryPanel, .calloutGrid, .modal {
+  .topologyCard, .heatPanel, .scenarioPanel, .industryPanel, .calloutGrid, .modal, .outputExplainer {
     border-radius: 22px;
     padding: 22px;
   }

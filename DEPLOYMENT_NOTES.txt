@@ -1,6 +1,6 @@
-MJC Executive Visibility / TrustMap Build
+MJC Interaction Refinement Build
 
-Copy all files and folders into the root of your mjc-site repository.
+Upload all files and folders into the root of your mjc-site repository.
 
 Then:
 1. Commit to main
@@ -8,7 +8,8 @@ Then:
 3. Confirm green check
 4. Open https://maximumjusticecybersecurity.github.io/mjc-site/
 
-Important:
-- CyberShield remains separate
-- TrustMap CTA launches CyberShield
-- Calendly is wired to https://calendly.com/maxjustice
+Changes:
+- Stable topology nodes
+- TrustMap center hover intelligence
+- Interactive TrustMap output tiles
+- Improved TrustMap Briefing CTA flow
