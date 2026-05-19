@@ -1,1 +1,9 @@
-Maximum Justice Cybersecurity provides executive cyber leadership, vCISO advisory, AI governance, audit readiness, Zero Trust architecture, and operational resilience support.
+# Maximum Justice Cybersecurity
+
+Maximum Justice Cybersecurity provides executive cyber leadership, vCISO advisory, AI governance, audit readiness, Zero Trust architecture, incident preparedness, and operational trust visibility.
+
+Signature offer: TrustMap, a semi-automated CyberShield first-pass report followed by expert validation from Dr. Max Justice.
+
+CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
+Calendly: https://calendly.com/maxjustice
+Contact: max@maximumjusticecybersecurity.com

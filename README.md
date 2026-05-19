@@ -1,15 +1,21 @@
-# MJC Website V6
+# MJC TrustMap Website Build
 
-Updates:
-- Uses uploaded MJC logo at public/mjc-logo.png
-- Adds Calendly URL: https://calendly.com/maxjustice
-- Moves Human Command Doctrine directly below Why MJC Exists
-- Keeps CyberShield separate as an outbound tool
-- Shifts color system toward powder blue, steel blue, white, and navy for trust
-- Keeps interactive services, industries, trust flow, and executive exposure panel
+GitHub-ready MJC website package centered around the TrustMap executive experience.
 
-Deploy:
-Copy all files into the mjc-site repo root, commit, and push to main.
+## Deploy
+1. Extract this package.
+2. Copy all files into the root of your `mjc-site` GitHub repo.
+3. Commit and push to `main`.
+4. GitHub Actions deploys automatically.
+5. Confirm GitHub Pages source is set to GitHub Actions.
 
-Expected URL:
-https://maximumjusticecybersecurity.github.io/mjc-site/
+## Links
+- MJC Site: https://maximumjusticecybersecurity.github.io/mjc-site/
+- CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
+- Calendly: https://calendly.com/maxjustice
+
+## Local run
+```bash
+npm install
+npm run dev
+```

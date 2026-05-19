@@ -1,4 +1,4 @@
-name: Deploy MJC Website V6 to GitHub Pages
+name: Deploy MJC TrustMap Site to GitHub Pages
 
 on:
   push:
@@ -32,7 +32,6 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
   deploy:
     environment:
       name: github-pages
