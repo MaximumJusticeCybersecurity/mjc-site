@@ -1,38 +1,22 @@
-# MJC Website VNext
+# MJC Website V12.1
 
-Executive Operational Visibility build for Maximum Justice Cybersecurity.
+GitHub Pages-ready React/Vite package for Maximum Justice Cybersecurity.
 
-## Core strategic truth
+This build restores the interactive first-pane TrustMap, includes the real Dr. Justice authority photo from the prior TrustMap foreground-fix package, preserves the Executive Operational Visibility positioning, and includes bot/AI discovery files.
 
-Most organizations already operate with more cyber and AI risk than leadership can clearly see.
-
-## Local run
+## Deploy
 
 ```bash
 npm install
-npm run dev
-```
-
-## Build
-
-```bash
 npm run build
 ```
 
-## GitHub Pages
+GitHub Pages base path is set in `vite.config.js` as `/mjc-site/`.
 
-This package is configured for the `mjc-site` repository.
+## Included discovery files
 
-Important Vite setting:
-
-```js
-base: '/mjc-site/'
-```
-
-Do not remove that line or GitHub Pages may deploy a blank screen.
-
-## Primary links
-
-- CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
-- Calendly: https://calendly.com/maxjustice
-- Contact: max@maximumjusticecybersecurity.com
+- `public/robots.txt`
+- `public/sitemap.xml`
+- `public/llms.txt`
+- OpenGraph/Twitter metadata in `index.html`
+- JSON-LD structured data in `index.html`
