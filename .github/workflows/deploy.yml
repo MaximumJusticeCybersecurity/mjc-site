@@ -1,4 +1,4 @@
-name: Deploy MJC Website V5 to GitHub Pages
+name: Deploy MJC Website V6 to GitHub Pages
 
 on:
   push:

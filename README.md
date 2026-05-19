@@ -1,29 +1,14 @@
-# MJC Website V5
+# MJC Website V6
 
-This version corrects the V4 feedback.
-
-Key changes:
-- Removes internal version language from visitor-facing copy
-- Uses a cleaner trust-oriented palette instead of heavy cyberpunk darkness
-- Uses the MJC logo path: public/mjc-logo.png
-- Adds meaningful clickable service cards
-- Adds meaningful clickable industry panels
-- Adds meaningful clickable trust-flow steps
-- Adds exposure selection that changes consequence, signal, and action context
+Updates:
+- Uses uploaded MJC logo at public/mjc-logo.png
+- Adds Calendly URL: https://calendly.com/maxjustice
+- Moves Human Command Doctrine directly below Why MJC Exists
 - Keeps CyberShield separate as an outbound tool
-- Includes vite.config.js for GitHub Pages under /mjc-site/
-- Includes GitHub Actions deployment workflow
+- Shifts color system toward powder blue, steel blue, white, and navy for trust
+- Keeps interactive services, industries, trust flow, and executive exposure panel
 
-## Logo
-
-Place your logo file here:
-
-public/mjc-logo.png
-
-The site will automatically use it in the header.
-
-## Deploy
-
+Deploy:
 Copy all files into the mjc-site repo root, commit, and push to main.
 
 Expected URL:
