@@ -1,0 +1,15 @@
+MJC Website V4 Deployment Notes
+
+1. Extract this package
+2. Copy all files into your mjc-site repository root
+3. Commit and push to main
+4. Go to GitHub → Settings → Pages
+5. Set source to GitHub Actions
+6. Go to Actions and confirm the V4 deployment workflow runs successfully
+7. Open https://maximumjusticecybersecurity.github.io/mjc-site/
+
+Important:
+- This package includes vite.config.js with base "/mjc-site/"
+- CyberShield remains separate and is only linked
+- The MJC website is the authority and conversion site
+- CyberShield is the separate operational tool
