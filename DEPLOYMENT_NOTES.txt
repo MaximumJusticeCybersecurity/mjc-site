@@ -1,0 +1,16 @@
+Maximum Justice Cybersecurity Modern Site V2
+
+Recommended:
+1. Create a new repo called mjc-site
+2. Clone it to C:\MJC-Site
+3. Copy all files from this package into that folder
+4. Commit and push
+5. Run npm install
+6. Run npm run build
+7. Deploy via GitHub Pages / GitHub Actions
+
+CyberShield remains separate:
+https://maximumjusticecybersecurity.github.io/CyberShield/
+
+Contact email is:
+max@maximumjusticecybersecurity.com
