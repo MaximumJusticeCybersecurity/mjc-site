@@ -1,0 +1,42 @@
+{
+  "manifest_version": "1.0",
+  "version_timestamp": "2026061909",
+  "status": "controlled-adoption-pending-canonical-merge",
+  "canonical_repository": "MaximumJusticeCybersecurity/Aegis",
+  "canonical_branch": "main",
+  "canonical_pull_request_dependency": 2,
+  "canonical_policy_path": "15_security/2026061909-agentic-security-identity-and-protection-standard.md",
+  "canonical_codex_instructions_path": "15_security/2026061909-codex-security-guardian-agent-build-instructions.md",
+  "canonical_policy_version": "2026061909",
+  "canonical_policy_integrity": {
+    "algorithm": "git-blob-sha",
+    "value": "9936634b8187f78e38b03f3bbe1c670fdeda1884"
+  },
+  "required_documents": [
+    "AGENTS.md",
+    "SECURITY.md",
+    "MaximumJusticeCybersecurity/Aegis:15_security/2026061909-agentic-security-identity-and-protection-standard.md",
+    "MaximumJusticeCybersecurity/Aegis:15_security/2026061909-codex-security-guardian-agent-build-instructions.md"
+  ],
+  "startup_attestation_required": true,
+  "protected_write_quorum_required": true,
+  "minimum_independent_verifiers": 2,
+  "human_approval_required_for": [
+    "merge",
+    "production-deployment",
+    "public-release",
+    "public-claim-change",
+    "data-capture-change",
+    "authentication-change",
+    "security-control-change"
+  ],
+  "fail_closed_on": [
+    "canonical-policy-not-merged",
+    "missing-or-stale-policy",
+    "integrity-mismatch",
+    "invalid-identity",
+    "missing-quorum",
+    "missing-human-approval",
+    "audit-log-failure"
+  ]
+}
