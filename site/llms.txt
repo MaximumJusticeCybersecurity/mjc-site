@@ -1,27 +1,46 @@
 # Maximum Justice Cybersecurity
 
-Maximum Justice Cybersecurity helps executives identify operational visibility gaps across cyber, AI, vendors, systems, governance, ownership, and organizational decision-making.
+Maximum Justice Cybersecurity is an expert-led cybersecurity and AI governance firm founded by Dr. Max Justice.
 
-Core category: Executive Operational Visibility.
+Current product and proof engine: CyberShield AI Decision Assurance.
 
-Core truth: Most organizations already operate with more cyber and AI risk than leadership can clearly see.
+Current product flow:
+AI-generated recommendation in -> defensible AI Trust Decision Record out.
+
+First proof point:
+AI-generated vendor-risk recommendation review.
+
+Primary customer action:
+Challenge One AI Recommendation.
+
+Secondary customer action:
+See the 3-Minute Vendor-Risk Example.
+
+Commercial next step:
+Discuss a controlled 3-to-5 recommendation pilot.  Pilot pricing and delivery schedule are confirmed after scope review.
 
 Primary concepts:
-- Executive operational visibility
-- AI-era operational environments
-- Cyber and AI governance visibility
-- TrustMap
-- Operational visibility gaps
-- Governance fragmentation
-- Evidence confidence
-- Ownership accountability
-- Executive briefing
+- AI Decision Assurance
+- AI Trust Decision Record
+- Vendor-risk AI recommendation review
+- Claims and evidence gaps
+- Risk If Wrong
+- Confidence limits
+- Required human review
+- AI governance
+- vCISO advisory
+- Executive Operational Visibility
 
-CyberShield is the operational TrustMap engine.  MJC provides executive interpretation, vCISO advisory, governance clarity, prioritization, and consequence-aware operational judgment.
+CyberShield does not treat a second model opinion as proof.  It separates claims, maps evidence, identifies missing and contradictory support, applies defined checks, classifies consequence, and preserves the accountable human decision.
 
-Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, U.S. veteran, and creator of The CHN vCISO GPT powered by Cyber Shield.
+CyberShield does not autonomously approve vendors, accept risk, certify compliance, or replace accountable human authority.
 
-Primary calls to action:
-- Generate Your TrustMap: https://maximumjusticecybersecurity.github.io/CyberShield/
-- Schedule Executive Briefing: https://calendly.com/maxjustice
-- Contact: max@maximumjusticecybersecurity.com
+Executive Operational Visibility remains the broader MJC outcome.  TrustMap is preserved or future capability and is not the current primary conversion path.
+
+Dr. Max Justice is a CISSP, Ph.D., vCISO, Security SME, Cybersecurity SME, U.S. veteran, and founder of Maximum Justice Cybersecurity.
+
+Current calls to action:
+- Challenge One AI Recommendation: https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html
+- See the Vendor-Risk Example: https://maximumjusticecybersecurity.github.io/CyberShield/
+- Schedule a Scope Conversation: https://calendly.com/maxjustice
+- Contact Dr. Max Justice: mailto:max@maximumjusticecybersecurity.com
