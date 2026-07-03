@@ -42,6 +42,20 @@ jobs:
           python -m json.tool content-governance.json > /dev/null
           grep -Fq '"deployment_performed": false' content-governance.json
 
+      - name: Verify public CyberShield destinations
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          for url in \
+            'https://maximumjusticecybersecurity.github.io/CyberShield/' \
+            'https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html'
+          do
+            code="$(curl --location --silent --show-error --retry 2 --max-time 25 --output /dev/null --write-out '%{http_code}' "$url")"
+            printf '%s %s\n' "$code" "$url" | tee -a artifacts/public-destination-checks.txt
+            test "$code" = '200'
+          done
+
       - name: Start local site
         shell: bash
         run: |
