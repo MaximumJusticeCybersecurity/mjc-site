@@ -1,0 +1,64 @@
+name: MJC Site Mobile Fix
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - site/index.html
+      - .github/workflows/mjc-site-mobile-fix.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch-mobile-layout:
+    if: github.head_ref == 'agent/2026062613-mjc-site-conversion'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the review branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Apply bounded responsive correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('site/index.html')
+          source = path.read_text(encoding='utf-8')
+          marker = '@media(max-width:520px)'
+          if marker in source:
+              print('Responsive correction already present.')
+              raise SystemExit(0)
+
+          old = '@media(max-width:900px){.hero,.artifact,.grid3,.grid2{grid-template-columns:1fr}.hero{padding-top:44px}.nav-links a:not(.nav-cta){display:none}.cred{grid-template-columns:1fr}.hero h1{font-size:clamp(2.35rem,12vw,4rem)}}'
+          new = old + '\n    @media(max-width:520px){.wrap{width:min(1160px,calc(100vw - 24px))}.nav-inner{gap:8px}.brand{gap:8px;min-width:0}.brand img{width:40px;height:40px}.brand span{min-width:0}.brand .eyebrow{font-size:.67rem;letter-spacing:.08em}.brand strong{font-size:.88rem;line-height:1.25}.nav-cta{max-width:160px;padding:9px 12px!important;text-align:center;font-size:.9rem;line-height:1.25}.hero{padding-top:32px}.hero-card{padding:26px 18px}.hero h1{font-size:clamp(2rem,9vw,2.35rem);line-height:1.04;letter-spacing:-.03em;overflow-wrap:normal}.hero p{font-size:1.02rem}.actions .btn{width:100%;padding-inline:12px;text-align:center}.card{padding:18px}.record-title{align-items:flex-start;flex-direction:column}.cta{padding:26px 18px}}'
+          if old not in source:
+              raise SystemExit('Expected mobile media query was not found; refusing broad edit.')
+
+          updated = source.replace(old, new, 1)
+          if updated.count(marker) != 1:
+              raise SystemExit('Responsive marker count is not exactly one.')
+          path.write_text(updated, encoding='utf-8')
+          PY
+
+      - name: Commit only when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- site/index.html; then
+            echo 'No mobile correction commit required.'
+            exit 0
+          fi
+          git config user.name 'MJC Site Review Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add site/index.html
+          git commit -m 'Correct mobile hero overflow and header spacing'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
