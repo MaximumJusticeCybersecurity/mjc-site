@@ -1,0 +1,7 @@
+services:
+  whitaker-voice-runtime:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - WHITAKER_ENV=local
