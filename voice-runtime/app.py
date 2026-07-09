@@ -2,14 +2,20 @@ from __future__ import annotations
 
 import base64
 import json
+import os
+import shutil
+import subprocess
+import tempfile
 import uuid
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Whitaker Voice Runtime", version="0.1.0")
+app = FastAPI(title="Whitaker Voice Runtime", version="0.2.0")
 
 
 class SessionRequest(BaseModel):
@@ -23,7 +29,18 @@ class SessionResponse(BaseModel):
     wsUrl: str
 
 
+class SpeechRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=1200)
+    voice: str = Field(default="whitaker-default")
+    consent: bool = Field(default=True)
+
+
 sessions: dict[str, dict[str, Any]] = {}
+
+PIPER_BIN = os.getenv("PIPER_BIN", "piper")
+PIPER_MODEL = os.getenv("PIPER_MODEL", "")
+AUDIO_DIR = Path(os.getenv("WHITAKER_AUDIO_DIR", "/tmp/whitaker-audio"))
+AUDIO_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @app.get("/health")
@@ -31,11 +48,22 @@ def health() -> dict[str, str]:
     return {"status": "ok", "service": "whitaker-voice-runtime"}
 
 
+@app.get("/api/whitaker/tts/status")
+def tts_status() -> dict[str, Any]:
+    return {
+        "status": "configured" if is_piper_ready() else "not_configured",
+        "engine": "piper",
+        "piperBinaryFound": shutil.which(PIPER_BIN) is not None,
+        "modelConfigured": bool(PIPER_MODEL),
+        "modelExists": Path(PIPER_MODEL).exists() if PIPER_MODEL else False,
+        "fallback": "browser-speech",
+    }
+
+
 @app.post("/api/whitaker/session", response_model=SessionResponse)
 def create_session(payload: SessionRequest) -> SessionResponse:
     if not payload.visitorConsent:
-        # Keep the response shape simple for the first scaffold.  Production should return HTTP 400.
-        pass
+        raise HTTPException(status_code=400, detail="Visitor consent is required for voice sessions.")
 
     session_id = str(uuid.uuid4())
     sessions[session_id] = {
@@ -49,11 +77,28 @@ def create_session(payload: SessionRequest) -> SessionResponse:
     return SessionResponse(sessionId=session_id, wsUrl=f"/api/whitaker/voice?sessionId={session_id}")
 
 
+@app.post("/api/whitaker/tts")
+def synthesize_speech(payload: SpeechRequest) -> FileResponse:
+    if not payload.consent:
+        raise HTTPException(status_code=400, detail="Consent is required for server-side speech synthesis.")
+    if looks_sensitive(payload.text):
+        raise HTTPException(status_code=400, detail="Text appears to contain sensitive material and will not be synthesized.")
+    if not is_piper_ready():
+        raise HTTPException(status_code=503, detail="Server-side TTS is not configured. Use browser fallback.")
+
+    audio_path = AUDIO_DIR / f"{uuid.uuid4()}.wav"
+    try:
+        run_piper(payload.text, audio_path)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"TTS synthesis failed: {exc}") from exc
+    return FileResponse(str(audio_path), media_type="audio/wav", filename="whitaker.wav")
+
+
 @app.websocket("/api/whitaker/voice")
 async def voice_socket(websocket: WebSocket, sessionId: str) -> None:  # noqa: N803 - match client query param
     await websocket.accept()
     session = sessions.setdefault(sessionId, {"createdAt": datetime.now(timezone.utc).isoformat()})
-    await websocket.send_json({"type": "assistant.message", "text": "Whitaker Voice Runtime connected.  Tell me what you need in one sentence."})
+    await send_assistant_message(websocket, session, "Whitaker Voice Runtime connected.  Tell me what you need in one sentence.")
 
     try:
         while True:
@@ -70,7 +115,7 @@ async def voice_socket(websocket: WebSocket, sessionId: str) -> None:  # noqa: N
             elif message_type == "audio.chunk":
                 await handle_audio_chunk(websocket, session, message)
             elif message_type == "audio.stop":
-                await websocket.send_json({"type": "assistant.message", "text": "Audio stopped.  You can continue by voice or type your next answer."})
+                await send_assistant_message(websocket, session, "Audio stopped.  You can continue by voice or type your next answer.")
             else:
                 await websocket.send_json({"type": "error", "message": f"Unsupported message type: {message_type}"})
     except WebSocketDisconnect:
@@ -84,7 +129,7 @@ async def handle_text(websocket: WebSocket, session: dict[str, Any], text: str) 
     session["score"] = max(session.get("score", 0), 25 if intent != "other" else 10)
     await websocket.send_json({"type": "transcript.final", "text": text})
     await websocket.send_json({"type": "state.patch", "intent": intent, "score": session["score"]})
-    await websocket.send_json({"type": "assistant.message", "text": response_for_intent(intent)})
+    await send_assistant_message(websocket, session, response_for_intent(intent))
 
 
 async def handle_audio_chunk(websocket: WebSocket, session: dict[str, Any], message: dict[str, Any]) -> None:
@@ -103,6 +148,37 @@ async def handle_audio_chunk(websocket: WebSocket, session: dict[str, Any], mess
         return
     session["audioChunks"] = int(session.get("audioChunks", 0)) + 1
     await websocket.send_json({"type": "transcript.partial", "text": "Audio received.  STT is not enabled in this scaffold yet."})
+
+
+async def send_assistant_message(websocket: WebSocket, session: dict[str, Any], text: str) -> None:
+    await websocket.send_json({"type": "assistant.message", "text": text})
+    session["lastAssistantText"] = text
+    if is_piper_ready() and not looks_sensitive(text):
+        # WebSocket audio payloads are intentionally deferred.  Client should call /api/whitaker/tts
+        # after receiving assistant.message to avoid large base64 frames during early rollout.
+        await websocket.send_json({"type": "assistant.audio_available", "engine": "piper"})
+
+
+def is_piper_ready() -> bool:
+    return shutil.which(PIPER_BIN) is not None and bool(PIPER_MODEL) and Path(PIPER_MODEL).exists()
+
+
+def run_piper(text: str, audio_path: Path) -> None:
+    command = [PIPER_BIN, "--model", PIPER_MODEL, "--output_file", str(audio_path)]
+    result = subprocess.run(command, input=text.encode("utf-8"), stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
+    if result.returncode != 0:
+        stderr = result.stderr.decode("utf-8", errors="ignore")[:500]
+        raise RuntimeError(stderr or "piper exited with non-zero status")
+
+
+def looks_sensitive(text: str) -> bool:
+    lower = text.lower()
+    blocked_terms = [
+        "password", "passwd", "secret", "private key", "api key", "token", "bearer ",
+        "ssn", "social security", "credit card", "cvv", "patient", "phi", "hipaa",
+        "ransom note", "indicator of compromise", "ioc", "log file", "credential",
+    ]
+    return any(term in lower for term in blocked_terms)
 
 
 def infer_intent(text: str) -> str:
