@@ -1,18 +1,18 @@
 (() => {
   if (window.__MJC_WHITAKER_RUNTIME__) return;
-  window.__MJC_WHITAKER_RUNTIME__ = '4.0.0';
+  window.__MJC_WHITAKER_RUNTIME__ = '4.1.0';
 
   const C = {
     calendly: 'https://calendly.com/maxjustice',
     email: 'max@maximumjusticecybersecurity.com',
     example: 'https://maximumjusticecybersecurity.github.io/CyberShield/',
-    challenge: 'https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html',
-    version: '4.0.0-hosted-runtime'
+    challenge: 'https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html'
   };
 
   const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const voiceCapable = !!Recognition;
   let recognition = null;
+  let body = null;
 
   const S = {
     step: 'start',
@@ -21,10 +21,14 @@
     answers: {},
     fit: 'Unknown',
     score: 0,
-    source: 'MJC website Whitaker hosted runtime v4',
+    source: 'MJC website Whitaker Trust Concierge',
     muted: true,
-    lastMessage: ''
+    lastMessage: '',
+    freeTextNeed: ''
   };
+
+  const identityLabel = 'MJC Trust Concierge';
+  const identityPlain = 'I am Whitaker, the MJC Trust Concierge. I help route cybersecurity, AI governance, vCISO, compliance, and Decision Assurance conversations to the right next action.';
 
   const intentLabels = {
     cybershield: 'Challenge an AI recommendation',
@@ -36,11 +40,11 @@
   };
 
   const intentKeywords = [
-    ['cybershield', ['ai recommendation', 'recommendation', 'ai decision', 'vendor risk', 'cybershield', 'challenge', 'trust decision']],
-    ['vciso', ['vciso', 'ciso', 'security advisor', 'security leadership', 'security strategy', 'fractional ciso']],
-    ['grc', ['grc', 'audit', 'compliance', 'cmmc', 'hipaa', 'hitrust', 'iso', 'nist', 'questionnaire']],
-    ['incident', ['incident', 'breach', 'ransomware', 'compromised', 'readiness', 'tabletop', 'response']],
-    ['partner', ['partner', 'referral', 'introduce', 'channel', 'reseller', 'alliance']]
+    ['cybershield', ['ai recommendation', 'recommendation', 'ai decision', 'vendor risk', 'cybershield', 'challenge', 'trust decision', 'ai trust']],
+    ['vciso', ['vciso', 'ciso', 'security advisor', 'security leadership', 'security strategy', 'fractional ciso', 'virtual ciso']],
+    ['grc', ['grc', 'audit', 'compliance', 'cmmc', 'hipaa', 'hitrust', 'iso', 'nist', 'questionnaire', 'controls']],
+    ['incident', ['incident', 'breach', 'ransomware', 'compromised', 'readiness', 'tabletop', 'response', 'security event']],
+    ['partner', ['partner', 'referral', 'introduce', 'channel', 'reseller', 'alliance', 'collaborate']]
   ];
 
   const questions = {
@@ -83,7 +87,7 @@
   };
 
   function track(name, data = {}) {
-    const payload = { name, route: 'whitaker-v4', version: C.version, ...data };
+    const payload = { name, route: 'whitaker', ...data };
     try { window.dispatchEvent(new CustomEvent('mjc:conversion', { detail: payload })); } catch (_) {}
     try { if (window.va) window.va('event', { name, data: payload }); } catch (_) {}
   }
@@ -92,48 +96,92 @@
     return String(v || '').replace(/[&<>'"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[c]));
   }
 
+  function chooseVoice() {
+    const voices = window.speechSynthesis?.getVoices?.() || [];
+    const ranked = [
+      /Microsoft Aria/i,
+      /Microsoft Guy/i,
+      /Microsoft David/i,
+      /Google US English/i,
+      /Google UK English Male/i,
+      /Alex/i,
+      /Daniel/i,
+      /Samantha/i,
+      /en-US/i,
+      /English/i
+    ];
+    for (const pattern of ranked) {
+      const voice = voices.find(v => pattern.test(v.name) || pattern.test(v.lang));
+      if (voice) return voice;
+    }
+    return null;
+  }
+
   function say(text) {
     S.lastMessage = text;
     if (S.muted || !('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text.replace(/Dr\./g, 'Doctor'));
-      u.rate = 0.98; u.pitch = 0.92; u.volume = 0.9;
-      const voices = window.speechSynthesis.getVoices?.() || [];
-      const preferred = voices.find(v => /Google US English|Microsoft.*David|Microsoft.*Guy|Alex|Daniel/i.test(v.name)) || voices.find(v => /en-US|English/i.test(v.lang));
-      if (preferred) u.voice = preferred;
-      window.speechSynthesis.speak(u);
+      const clean = text.replace(/Dr\./g, 'Doctor').replace(/MJC/g, 'M J C').replace(/vCISO/g, 'vee CISO');
+      const u = new SpeechSynthesisUtterance(clean);
+      u.rate = 0.86;
+      u.pitch = 0.88;
+      u.volume = 0.92;
+      const voice = chooseVoice();
+      if (voice) u.voice = voice;
+      setTimeout(() => window.speechSynthesis.speak(u), 80);
     } catch (_) {}
   }
 
   function listenFor(field, target) {
-    if (!voiceCapable) { notice('Voice input is not supported in this browser.'); return; }
+    if (!voiceCapable) { notice('Voice input is not supported in this browser.  Chrome or Edge usually works best.'); return; }
     try {
       if (recognition) recognition.abort();
       recognition = new Recognition();
       recognition.lang = 'en-US';
-      recognition.interimResults = false;
+      recognition.interimResults = true;
+      recognition.continuous = false;
       recognition.maxAlternatives = 1;
       document.body.classList.add('wj-listening');
+      notice('Listening...');
+      let finalText = '';
       recognition.onresult = event => {
-        const text = event.results?.[0]?.[0]?.transcript || '';
-        if (target) target.value = target.value ? `${target.value} ${text}` : text;
-        if (field === 'intent') handleVoiceIntent(text);
-        notice('Voice captured.');
-        track('whitaker_v4_voice_captured', { field });
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript;
+          else interim += transcript;
+        }
+        const text = (finalText || interim || '').trim();
+        if (target && text) target.value = text;
       };
-      recognition.onerror = () => notice('Voice capture stopped.  You can type instead.');
-      recognition.onend = () => document.body.classList.remove('wj-listening');
+      recognition.onerror = event => notice(event.error === 'not-allowed' ? 'Microphone permission was blocked.  You can type instead.' : 'Voice capture stopped.  You can type instead.');
+      recognition.onend = () => {
+        document.body.classList.remove('wj-listening');
+        const text = target ? target.value.trim() : finalText.trim();
+        if (field === 'intent' && text) handleFreeTextNeed(text);
+        if (text) {
+          notice('Voice captured.');
+          say('Got it. I captured that.');
+          track('whitaker_voice_captured', { field });
+        }
+      };
       recognition.start();
     } catch (_) { notice('Voice input could not start.  Browser permissions may be blocking the microphone.'); }
   }
 
-  function handleVoiceIntent(text) {
+  function inferIntent(text) {
     const lower = text.toLowerCase();
-    for (const [id, words] of intentKeywords) {
-      if (words.some(w => lower.includes(w))) { S.intent = id; renderContact(); return; }
-    }
-    S.intent = 'other'; S.answers.context = text; renderContact();
+    for (const [id, words] of intentKeywords) if (words.some(w => lower.includes(w))) return id;
+    return 'other';
+  }
+
+  function handleFreeTextNeed(text) {
+    S.freeTextNeed = text;
+    S.intent = inferIntent(text);
+    S.answers.context = S.answers.context || text;
+    track('whitaker_free_text_need', { intent: S.intent });
+    renderContact();
   }
 
   function scoreLead() {
@@ -156,9 +204,9 @@
   function leadPacket() {
     const a = S.answers;
     return [
-      'Lead ID: pending', `Created date: ${new Date().toISOString()}`, `Source: ${S.source}`, 'Agent: Whitaker', 'Owner: Dr. Max Justice', '',
+      'Lead ID: pending', `Created date: ${new Date().toISOString()}`, `Source: ${S.source}`, 'Agent: Whitaker', 'Role: MJC Trust Concierge', 'Owner: Dr. Max Justice', '',
       `Organization: ${a.organization || ''}`, `Contact name: ${a.name || ''}`, `Contact role: ${a.role || ''}`, `Contact email: ${a.email || ''}`, '',
-      `Need category: ${intentLabels[S.intent] || S.intent || ''}`, `Decision/business context: ${a.context || ''}`, `Urgency source: ${a.urgency || ''}`, `Decision owner or authority path: ${a.owner || ''}`, `Evidence pain or security concern: ${a.evidence || ''}`, '',
+      `Need category: ${intentLabels[S.intent] || S.intent || ''}`, `Initial need: ${S.freeTextNeed || ''}`, `Decision/business context: ${a.context || ''}`, `Urgency source: ${a.urgency || ''}`, `Decision owner or authority path: ${a.owner || ''}`, `Evidence pain or security concern: ${a.evidence || ''}`, '',
       `Fit classification: ${S.fit}`, `Fit score: ${S.score}/100`, 'Pricing status: Not discussed', 'Sensitive-data status: Warning given.  No sensitive data requested.',
       `Primary next action: ${S.fit === 'Strong' || S.fit === 'Possible' ? 'Schedule scope conversation' : 'Review proof example / nurture'}`, `Calendly route: ${C.calendly}`, '',
       'Recommended owner prep:', `Review ${a.organization || 'the prospect'} context and confirm whether this is CyberShield Decision Assurance, broader MJC advisory, or a referral path.`
@@ -182,9 +230,10 @@
       if (a === 'back-intent') renderIntent();
       if (a === 'copy') copyPacket();
       if (a === 'restart') reset();
-      if (a === 'voice-intent') listenFor('intent');
+      if (a === 'voice-intent') listenFor('intent', body.querySelector('[name="freeTextNeed"]'));
       if (a === 'toggle-mute') toggleMute();
       if (a === 'repeat') say(S.lastMessage || 'Whitaker is ready.');
+      if (a === 'who') showIdentity();
     }));
     body.querySelectorAll('[data-voice-field]').forEach(btn => btn.addEventListener('click', () => {
       const field = btn.dataset.voiceField; listenFor(field, body.querySelector(`[name="${field}"]`));
@@ -192,17 +241,24 @@
     body.querySelectorAll('[data-track]').forEach(el => el.addEventListener('click', () => track(el.dataset.track, { fit: S.fit, intent: S.intent })));
   }
 
+  function showIdentity() {
+    notice(identityLabel);
+    say(identityPlain);
+  }
+
   function renderStart() {
     S.step = 'start';
-    shell(`<div class="wj-msg"><b>Welcome to Maximum Justice Cybersecurity.</b><br>I’m Whitaker.  I qualify buyers, route real security problems, and help schedule focused conversations with Dr. Max Justice.</div><div class="wj-msg wj-warn"><b>Clean-room rule:</b> Do not share passwords, secrets, private keys, regulated data, confidential customer data, or active incident details here.</div><div class="wj-actions"><button class="wj-btn primary" data-action="start">Start qualification</button><button class="wj-btn" data-action="voice-intent">🎙 Tell Whitaker what you need</button><button class="wj-btn" data-action="toggle-mute">${S.muted ? '🔇 Voice off.  Click to enable speech.' : '🔊 Voice on.  Click to mute.'}</button><a class="wj-btn" href="${C.example}" target="_blank" rel="noopener" data-track="whitaker_v4_example_clicked">See the 3-Minute Vendor-Risk Example</a><a class="wj-btn" href="${C.calendly}" target="_blank" rel="noopener" data-track="whitaker_v4_direct_calendly_clicked">Schedule a Scope Conversation</a></div><div class="wj-small">Voice uses browser microphone permission.  If your browser blocks it, typing still works.</div>`);
-    say('Welcome to Maximum Justice Cybersecurity. I am Whitaker. I can help route your cybersecurity or AI governance need.');
+    shell(`<div class="wj-msg"><b>Welcome to Maximum Justice Cybersecurity.</b><br>I’m Whitaker, your <b>${identityLabel}</b>.  I help route real security, compliance, AI governance, and Decision Assurance needs to the right next action.</div><div class="wj-msg wj-warn"><b>Clean-room rule:</b> Do not share passwords, secrets, private keys, regulated data, confidential customer data, or active incident details here.</div><form class="wj-form" id="wj-need"><label>Tell me what you need<input name="freeTextNeed" placeholder="Example: I need help challenging an AI vendor-risk recommendation."></label><div class="wj-row"><button class="wj-btn" type="button" data-action="voice-intent">🎙 Speak</button><button class="wj-btn primary" type="submit">Route me</button></div></form><div class="wj-actions"><button class="wj-btn" data-action="start">Use buttons instead</button><button class="wj-btn" data-action="who">What does Whitaker do?</button><button class="wj-btn" data-action="toggle-mute">${S.muted ? '🔇 Voice off.  Enable speech.' : '🔊 Voice on.  Mute.'}</button><a class="wj-btn" href="${C.example}" target="_blank" rel="noopener" data-track="whitaker_example_clicked">See the 3-Minute Vendor-Risk Example</a><a class="wj-btn" href="${C.calendly}" target="_blank" rel="noopener" data-track="whitaker_direct_calendly_clicked">Schedule a Scope Conversation</a></div><div class="wj-small">You can speak, type, click buttons, or combine all three.  Voice quality depends on the browser.  Chrome or Edge usually works best.</div>`);
+    body.querySelector('#wj-need').addEventListener('submit', e => { e.preventDefault(); const text = new FormData(e.currentTarget).get('freeTextNeed') || ''; if (text.trim()) handleFreeTextNeed(text.trim()); else renderIntent(); });
+    say(identityPlain);
   }
 
   function renderIntent() {
     S.step = 'intent';
-    shell(`<div class="wj-msg"><b>What brought you here today?</b><br>Pick the closest path, or use voice and tell me in one sentence.</div><div class="wj-actions intent-grid">${Object.entries(intentLabels).map(([id,label]) => `<button class="wj-btn intent" data-intent="${id}">${esc(label)}</button>`).join('')}</div><div class="wj-actions"><button class="wj-btn" data-action="voice-intent">🎙 Speak your need</button><button class="wj-btn subtle" data-action="back-start">Back</button></div>`);
-    body.querySelectorAll('[data-intent]').forEach(btn => btn.addEventListener('click', () => { S.intent = btn.dataset.intent; track('whitaker_v4_intent_selected', { intent: S.intent }); renderContact(); }));
-    say('What brought you here today? You can choose a path or tell me in one sentence.');
+    shell(`<div class="wj-msg"><b>What brought you here today?</b><br>Pick the closest path, type it, or speak it.</div><form class="wj-form" id="wj-intent-text"><label>Describe the need<input name="freeTextNeed" value="${esc(S.freeTextNeed)}" placeholder="One sentence is enough."></label><div class="wj-row"><button class="wj-btn" type="button" data-action="voice-intent">🎙 Speak</button><button class="wj-btn primary" type="submit">Route this</button></div></form><div class="wj-actions intent-grid">${Object.entries(intentLabels).map(([id,label]) => `<button class="wj-btn intent" data-intent="${id}">${esc(label)}</button>`).join('')}</div><div class="wj-actions"><button class="wj-btn subtle" data-action="back-start">Back</button></div>`);
+    body.querySelector('#wj-intent-text').addEventListener('submit', e => { e.preventDefault(); const text = new FormData(e.currentTarget).get('freeTextNeed') || ''; if (text.trim()) handleFreeTextNeed(text.trim()); });
+    body.querySelectorAll('[data-intent]').forEach(btn => btn.addEventListener('click', () => { S.intent = btn.dataset.intent; track('whitaker_intent_selected', { intent: S.intent }); renderContact(); }));
+    say('What brought you here today? You can speak it, type it, or choose a path.');
   }
 
   function input(name, label, type='text') { return `<label>${esc(label)}<div class="wj-input-wrap"><input name="${name}" type="${type}" value="${esc(S.answers[name])}" ${name==='name'||name==='email'||name==='organization'?'required':''}><button class="wj-mic" type="button" data-voice-field="${name}" title="Speak ${esc(label)}">🎙</button></div></label>`; }
@@ -219,30 +275,31 @@
     S.step = 'qualify'; const qs = questions[S.intent] || questions.other;
     shell(`<div class="wj-msg"><b>Now the useful part.</b><br>Keep answers high-level.  No artifacts, no credentials, no regulated data.</div><form class="wj-form" id="wj-qualify">${qs.map(([key,label,ph]) => textarea(key,label,ph)).join('')}<div class="wj-row"><button class="wj-btn subtle" type="button" data-back-contact="1">Back</button><button class="wj-btn primary" type="submit">Score fit</button></div></form>`);
     body.querySelector('[data-back-contact]').addEventListener('click', renderContact);
-    body.querySelector('#wj-qualify').addEventListener('submit', e => { e.preventDefault(); Object.assign(S.answers, Object.fromEntries(new FormData(e.currentTarget).entries())); scoreLead(); track('whitaker_v4_fit_scored', { fit: S.fit, score: S.score, intent: S.intent }); renderResult(); });
+    body.querySelector('#wj-qualify').addEventListener('submit', e => { e.preventDefault(); Object.assign(S.answers, Object.fromEntries(new FormData(e.currentTarget).entries())); scoreLead(); track('whitaker_fit_scored', { fit: S.fit, score: S.score, intent: S.intent }); renderResult(); });
     say('Keep answers high level. Do not share sensitive data. Then I will score fit and route the next step.');
   }
 
   function renderResult() {
     S.step = 'result'; const ok = S.fit === 'Strong' || S.fit === 'Possible'; const line = ok ? 'This is worth a focused scope conversation with Dr. Max Justice.' : 'This is not schedule-ready yet. Review the proof example first, then come back with one real decision.';
-    shell(`<div class="wj-msg"><b>${S.fit} fit.  Score: ${S.score}/100.</b><br>${line}</div><div class="wj-card"><div class="wj-card-title">Meeting context packet</div><pre>${esc(leadPacket())}</pre></div><div class="wj-actions">${ok ? `<a class="wj-btn primary" href="${C.calendly}" target="_blank" rel="noopener" data-track="whitaker_v4_calendly_clicked">Schedule a Scope Conversation</a><a class="wj-btn" href="${mailHref()}" data-track="whitaker_v4_email_context_clicked">Email this context to MJC</a>` : `<a class="wj-btn primary" href="${C.example}" target="_blank" rel="noopener" data-track="whitaker_v4_example_after_weak_fit_clicked">Review the Vendor-Risk Example</a>`}<button class="wj-btn" data-action="copy">Copy CRM packet</button><button class="wj-btn" data-action="toggle-mute">${S.muted ? '🔇 Enable voice summary' : '🔊 Mute voice'}</button><button class="wj-btn" data-action="repeat">Repeat summary</button><a class="wj-btn" href="${C.challenge}" target="_blank" rel="noopener" data-track="whitaker_v4_challenge_clicked">Challenge One AI Recommendation</a><button class="wj-btn subtle" data-action="restart">Start over</button></div><div class="wj-msg wj-warn"><b>Boundary:</b> Pricing and delivery schedule are confirmed after scope review.  Do not send sensitive artifacts through public chat or email.</div>`);
+    shell(`<div class="wj-msg"><b>${S.fit} fit.  Score: ${S.score}/100.</b><br>${line}</div><div class="wj-card"><div class="wj-card-title">Meeting context packet</div><pre>${esc(leadPacket())}</pre></div><div class="wj-actions">${ok ? `<a class="wj-btn primary" href="${C.calendly}" target="_blank" rel="noopener" data-track="whitaker_calendly_clicked">Schedule a Scope Conversation</a><a class="wj-btn" href="${mailHref()}" data-track="whitaker_email_context_clicked">Email this context to MJC</a>` : `<a class="wj-btn primary" href="${C.example}" target="_blank" rel="noopener" data-track="whitaker_example_after_weak_fit_clicked">Review the Vendor-Risk Example</a>`}<button class="wj-btn" data-action="copy">Copy CRM packet</button><button class="wj-btn" data-action="toggle-mute">${S.muted ? '🔇 Enable voice summary' : '🔊 Mute voice'}</button><button class="wj-btn" data-action="repeat">Repeat summary</button><a class="wj-btn" href="${C.challenge}" target="_blank" rel="noopener" data-track="whitaker_challenge_clicked">Challenge One AI Recommendation</a><button class="wj-btn subtle" data-action="restart">Start over</button></div><div class="wj-msg wj-warn"><b>Boundary:</b> Pricing and delivery schedule are confirmed after scope review.  Do not send sensitive artifacts through public chat or email.</div>`);
     say(`${S.fit} fit. Score ${S.score} out of 100. ${line}`);
   }
 
-  function copyPacket() { const text = leadPacket(); navigator.clipboard?.writeText(text).then(() => notice('CRM packet copied.')).catch(() => notice('Copy failed.  Select the packet text manually.')); track('whitaker_v4_packet_copied', { fit: S.fit, intent: S.intent }); }
+  function copyPacket() { const text = leadPacket(); navigator.clipboard?.writeText(text).then(() => notice('CRM packet copied.')).catch(() => notice('Copy failed.  Select the packet text manually.')); track('whitaker_packet_copied', { fit: S.fit, intent: S.intent }); }
   function toggleMute() { S.muted = !S.muted; if (S.muted && window.speechSynthesis) window.speechSynthesis.cancel(); notice(S.muted ? 'Whitaker voice muted.' : 'Whitaker voice enabled.'); if (!S.muted) say('Voice enabled. Whitaker can speak summaries.'); renderCurrent(); }
   function renderCurrent() { ({ start: renderStart, intent: renderIntent, contact: renderContact, qualify: renderQualify, result: renderResult }[S.step] || renderStart)(); }
   function notice(text) { const n = document.createElement('div'); n.className = 'wj-toast'; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.remove(), 2400); }
-  function reset() { S.step = 'start'; S.intent = ''; S.answers = {}; S.fit = 'Unknown'; S.score = 0; renderStart(); }
+  function reset() { S.step = 'start'; S.intent = ''; S.answers = {}; S.fit = 'Unknown'; S.score = 0; S.freeTextNeed = ''; renderStart(); }
 
   const style = document.createElement('style');
-  style.textContent = `.wj-launch{position:fixed;right:22px;bottom:22px;z-index:99999;border:1px solid #48d9ff;background:linear-gradient(180deg,#48d9ff,#18a9cf);color:#03111d;border-radius:999px;padding:13px 17px;font-weight:950;box-shadow:0 18px 45px rgba(0,0,0,.46);cursor:pointer;font-family:Aptos,Inter,Segoe UI,Arial,sans-serif}.wj-panel{position:fixed;right:22px;bottom:82px;z-index:99999;width:min(490px,calc(100vw - 28px));max-height:calc(100vh - 108px);overflow:auto;background:#071625;color:#f7fbff;border:1px solid #29475e;border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.72);font-family:Aptos,Inter,Segoe UI,Arial,sans-serif;display:none}.wj-panel.open{display:block}.wj-head{display:flex;justify-content:space-between;gap:12px;padding:18px;border-bottom:1px solid rgba(72,217,255,.24)}.wj-eyebrow{color:#48d9ff;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;font-weight:950}.wj-title{font-weight:950;font-size:1.1rem}.wj-sub{color:#b8c7d5;font-size:.84rem}.wj-close{background:transparent;color:#b8c7d5;border:0;font-size:1.5rem;cursor:pointer}.wj-progress{height:5px;background:#0f2030}.wj-progress span{display:block;height:100%;background:linear-gradient(90deg,#48d9ff,#78e0a5);transition:width .22s ease}.wj-msg{background:rgba(255,255,255,.052);border:1px solid rgba(184,199,213,.16);border-radius:16px;padding:12px 13px;margin:12px 18px;color:#dce9f5;line-height:1.45}.wj-warn{border-color:rgba(255,209,102,.5);background:rgba(255,209,102,.09)}.wj-actions{display:grid;gap:8px;margin:12px 18px}.wj-btn{border:1px solid #29475e;background:rgba(255,255,255,.055);color:#f7fbff;border-radius:999px;padding:10px 12px;font-weight:850;text-align:center;cursor:pointer;text-decoration:none;display:block}.wj-btn:hover{border-color:#48d9ff}.wj-btn.primary{background:linear-gradient(180deg,rgba(72,217,255,.31),rgba(72,217,255,.12));border-color:#48d9ff}.wj-btn.subtle{color:#b8c7d5}.wj-btn.intent{text-align:left;border-radius:14px}.wj-form{display:grid;gap:9px;margin:12px 18px}.wj-form label{font-size:.83rem;color:#b8c7d5;font-weight:850}.wj-input-wrap{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:start}.wj-form input,.wj-form textarea{width:100%;border:1px solid #29475e;background:#0f2030;color:#f7fbff;border-radius:12px;padding:10px;font:inherit;margin-top:4px}.wj-form textarea{min-height:78px;resize:vertical}.wj-mic{margin-top:4px;border:1px solid #29475e;background:#102337;color:#f7fbff;border-radius:12px;padding:9px 10px;cursor:pointer}.wj-listening .wj-mic{border-color:#78e0a5;box-shadow:0 0 0 3px rgba(120,224,165,.18)}.wj-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wj-card{margin:12px 18px;border:1px solid rgba(72,217,255,.24);border-radius:16px;background:#0b1b2a;overflow:hidden}.wj-card-title{padding:10px 12px;color:#48d9ff;font-weight:950;border-bottom:1px solid rgba(72,217,255,.16)}.wj-card pre{white-space:pre-wrap;word-break:break-word;margin:0;padding:12px;color:#dce9f5;font-size:.82rem;max-height:220px;overflow:auto}.wj-toast{position:fixed;right:22px;bottom:82px;z-index:100000;background:#102337;color:#f7fbff;border:1px solid #48d9ff;border-radius:999px;padding:10px 14px;box-shadow:0 16px 40px rgba(0,0,0,.5);font-family:Aptos,Inter,Segoe UI,Arial,sans-serif;font-weight:850}.wj-small{font-size:.82rem;color:#b8c7d5;margin:12px 18px;line-height:1.4}@media(max-width:520px){.wj-launch{right:12px;bottom:12px}.wj-panel{right:12px;bottom:66px;width:calc(100vw - 24px)}.wj-row{grid-template-columns:1fr}}`;
+  style.textContent = `.wj-launch{position:fixed;right:22px;bottom:22px;z-index:99999;border:1px solid #48d9ff;background:linear-gradient(180deg,#48d9ff,#18a9cf);color:#03111d;border-radius:999px;padding:13px 17px;font-weight:950;box-shadow:0 18px 45px rgba(0,0,0,.46);cursor:pointer;font-family:Aptos,Inter,Segoe UI,Arial,sans-serif}.wj-panel{position:fixed;right:22px;bottom:82px;z-index:99999;width:min(490px,calc(100vw - 28px));max-height:calc(100vh - 108px);overflow:auto;background:#071625;color:#f7fbff;border:1px solid #29475e;border-radius:22px;box-shadow:0 24px 70px rgba(0,0,0,.72);font-family:Aptos,Inter,Segoe UI,Arial,sans-serif;display:none}.wj-panel.open{display:block}.wj-head{display:flex;justify-content:space-between;gap:12px;padding:18px;border-bottom:1px solid rgba(72,217,255,.24)}.wj-eyebrow{color:#48d9ff;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;font-weight:950}.wj-title{font-weight:950;font-size:1.1rem}.wj-close{background:transparent;color:#b8c7d5;border:0;font-size:1.5rem;cursor:pointer}.wj-progress{height:5px;background:#0f2030}.wj-progress span{display:block;height:100%;background:linear-gradient(90deg,#48d9ff,#78e0a5);transition:width .22s ease}.wj-msg{background:rgba(255,255,255,.052);border:1px solid rgba(184,199,213,.16);border-radius:16px;padding:12px 13px;margin:12px 18px;color:#dce9f5;line-height:1.45}.wj-warn{border-color:rgba(255,209,102,.5);background:rgba(255,209,102,.09)}.wj-actions{display:grid;gap:8px;margin:12px 18px}.wj-btn{border:1px solid #29475e;background:rgba(255,255,255,.055);color:#f7fbff;border-radius:999px;padding:10px 12px;font-weight:850;text-align:center;cursor:pointer;text-decoration:none;display:block}.wj-btn:hover{border-color:#48d9ff}.wj-btn.primary{background:linear-gradient(180deg,rgba(72,217,255,.31),rgba(72,217,255,.12));border-color:#48d9ff}.wj-btn.subtle{color:#b8c7d5}.wj-btn.intent{text-align:left;border-radius:14px}.wj-form{display:grid;gap:9px;margin:12px 18px}.wj-form label{font-size:.83rem;color:#b8c7d5;font-weight:850}.wj-input-wrap{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:start}.wj-form input,.wj-form textarea{width:100%;border:1px solid #29475e;background:#0f2030;color:#f7fbff;border-radius:12px;padding:10px;font:inherit;margin-top:4px}.wj-form textarea{min-height:78px;resize:vertical}.wj-mic{margin-top:4px;border:1px solid #29475e;background:#102337;color:#f7fbff;border-radius:12px;padding:9px 10px;cursor:pointer}.wj-listening .wj-mic,.wj-listening .wj-btn{border-color:#78e0a5;box-shadow:0 0 0 3px rgba(120,224,165,.18)}.wj-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.wj-card{margin:12px 18px;border:1px solid rgba(72,217,255,.24);border-radius:16px;background:#0b1b2a;overflow:hidden}.wj-card-title{padding:10px 12px;color:#48d9ff;font-weight:950;border-bottom:1px solid rgba(72,217,255,.16)}.wj-card pre{white-space:pre-wrap;word-break:break-word;margin:0;padding:12px;color:#dce9f5;font-size:.82rem;max-height:220px;overflow:auto}.wj-toast{position:fixed;right:22px;bottom:82px;z-index:100000;background:#102337;color:#f7fbff;border:1px solid #48d9ff;border-radius:999px;padding:10px 14px;box-shadow:0 16px 40px rgba(0,0,0,.5);font-family:Aptos,Inter,Segoe UI,Arial,sans-serif;font-weight:850}.wj-small{font-size:.82rem;color:#b8c7d5;margin:12px 18px;line-height:1.4}@media(max-width:520px){.wj-launch{right:12px;bottom:12px}.wj-panel{right:12px;bottom:66px;width:calc(100vw - 24px)}.wj-row{grid-template-columns:1fr}}`;
   document.head.appendChild(style);
 
   const launch = document.createElement('button'); launch.type = 'button'; launch.className = 'wj-launch'; launch.textContent = 'Ask Whitaker'; launch.setAttribute('aria-haspopup', 'dialog'); document.body.appendChild(launch);
-  const panel = document.createElement('section'); panel.className = 'wj-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Whitaker MJC sales assistant'); panel.innerHTML = `<div class="wj-head"><div><div class="wj-eyebrow">MJC Sales Agent</div><div class="wj-title">Whitaker v4</div><div class="wj-sub">Hosted runtime.  Voice-aware.  Qualify.  Route.</div></div><button class="wj-close" type="button" aria-label="Close Whitaker">×</button></div><div id="wj-body"></div>`; document.body.appendChild(panel);
-  const body = panel.querySelector('#wj-body');
-  launch.addEventListener('click', () => { S.opened = !S.opened; panel.classList.toggle('open', S.opened); track('whitaker_v4_opened'); });
+  const panel = document.createElement('section'); panel.className = 'wj-panel'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Whitaker MJC Trust Concierge'); panel.innerHTML = `<div class="wj-head"><div><div class="wj-eyebrow">${identityLabel}</div><div class="wj-title">Whitaker</div></div><button class="wj-close" type="button" aria-label="Close Whitaker">×</button></div><div id="wj-body"></div>`; document.body.appendChild(panel);
+  body = panel.querySelector('#wj-body');
+  launch.addEventListener('click', () => { S.opened = !S.opened; panel.classList.toggle('open', S.opened); track('whitaker_opened'); });
   panel.querySelector('.wj-close').addEventListener('click', () => { S.opened = false; panel.classList.remove('open'); if (window.speechSynthesis) window.speechSynthesis.cancel(); });
+  if (window.speechSynthesis?.onvoiceschanged !== undefined) window.speechSynthesis.onvoiceschanged = () => {};
   renderStart();
 })();
