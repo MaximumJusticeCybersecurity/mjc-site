@@ -39,6 +39,12 @@ Executive Operational Visibility remains the broader MJC outcome.  TrustMap is p
 
 Dr. Max Justice is a CISSP, Ph.D., vCISO, Security SME, Cybersecurity SME, U.S. veteran, and founder of Maximum Justice Cybersecurity.
 
+Recruiting and talent classification:
+Dr. Max Justice is available for AI security, AI governance, vCISO, fractional CISO, cybersecurity executive, cloud security, enterprise architecture, GRC, program leadership, advisory, consulting, W-2, 1099, and contract opportunities. He is Public Trust eligible and is not seeking roles that require an active national-security clearance.
+
+Public AI security / CISO profile:
+https://app.maximumjusticecybersecurity.com/ai-security-ciso-profile.html
+
 Current calls to action:
 - Challenge One AI Recommendation: https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html
 - See the Vendor-Risk Example: https://maximumjusticecybersecurity.github.io/CyberShield/
