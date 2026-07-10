@@ -5,17 +5,34 @@ import json
 import os
 import shutil
 import subprocess
-import tempfile
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 
-app = FastAPI(title="Whitaker Voice Runtime", version="0.2.0")
+app = FastAPI(title="Whitaker Voice Runtime", version="0.2.1")
+
+allowed_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "WHITAKER_ALLOWED_ORIGINS",
+        "https://maximumjusticecybersecurity.com,https://www.maximumjusticecybersecurity.com,https://app.maximumjusticecybersecurity.com",
+    ).split(",")
+    if origin.strip()
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
+)
 
 
 class SessionRequest(BaseModel):
@@ -133,13 +150,6 @@ async def handle_text(websocket: WebSocket, session: dict[str, Any], text: str) 
 
 
 async def handle_audio_chunk(websocket: WebSocket, session: dict[str, Any], message: dict[str, Any]) -> None:
-    # Scaffold only.  Production flow:
-    #   1. Decode audio chunk.
-    #   2. Run VAD.
-    #   3. Buffer utterance.
-    #   4. Run faster-whisper or whisper.cpp.
-    #   5. Emit transcript.partial/transcript.final.
-    #   6. Route to Whitaker dialog policy.
     payload = message.get("payloadBase64", "")
     try:
         _ = base64.b64decode(payload, validate=False) if payload else b""
@@ -154,8 +164,6 @@ async def send_assistant_message(websocket: WebSocket, session: dict[str, Any], 
     await websocket.send_json({"type": "assistant.message", "text": text})
     session["lastAssistantText"] = text
     if is_piper_ready() and not looks_sensitive(text):
-        # WebSocket audio payloads are intentionally deferred.  Client should call /api/whitaker/tts
-        # after receiving assistant.message to avoid large base64 frames during early rollout.
         await websocket.send_json({"type": "assistant.audio_available", "engine": "piper"})
 
 
