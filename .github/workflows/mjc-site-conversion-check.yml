@@ -20,7 +20,7 @@ jobs:
       - name: Check out reviewed commit
         uses: actions/checkout@v4
 
-      - name: Verify current content and boundaries
+      - name: Verify homepage authority hybrid and boundaries
         shell: bash
         run: |
           set -euo pipefail
@@ -28,19 +28,48 @@ jobs:
           grep -Fq 'Challenge One AI Recommendation' site/index.html
           grep -Fq 'See the 3-Minute Vendor-Risk Example' site/index.html
           grep -Fq 'AI Trust Decision Record' site/index.html
-          grep -Fq 'Is this another AI judging the first AI?' site/index.html
-          grep -Fq 'Executive Operational Visibility' site/index.html
-          grep -Fq 'Pilot pricing and delivery schedule are confirmed after scope review.' site/index.html
+          grep -Fq 'CyberShield and AI Decision Assurance' site/index.html
+          grep -Fq 'vCISO and executive security leadership' site/index.html
+          grep -Fq 'AI governance, vendor risk, GRC, and compliance' site/index.html
+          grep -Fq 'dr-max-justice-capitol-placeholder.svg' site/index.html
+          grep -Fq 'nav-toggle' site/index.html
+          grep -Fq 'aria-expanded="false"' site/index.html
+          grep -Fq 'prefers-reduced-motion' site/index.html
+          grep -Fq 'mjc:analytics' site/index.html
           grep -Fq 'https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html' site/index.html
           grep -Fq 'https://maximumjusticecybersecurity.github.io/CyberShield/' site/index.html
           grep -Fq 'https://calendly.com/maxjustice' site/index.html
           grep -Fq 'mailto:max@maximumjusticecybersecurity.com' site/index.html
           ! grep -Fq 'Generate Your TrustMap' site/index.html
           ! grep -Fq 'Internal QA' site/index.html
-          ! grep -Fq 'Generate Your TrustMap' site/llms.txt
+          ! grep -Fq 'autonomously approve' site/index.html
           grep -Fq 'AI-generated recommendation in -> defensible AI Trust Decision Record out.' site/llms.txt
+          grep -Fq 'Preserve commercial, public-sector, regulated-industry, and executive applicability' site/llms.txt
           python -m json.tool content-governance.json > /dev/null
           grep -Fq '"deployment_performed": false' content-governance.json
+
+      - name: Verify HTML structure and structured data
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import json, re
+          text = Path('site/index.html').read_text(encoding='utf-8')
+          class Parser(HTMLParser):
+              def error(self, message):
+                  raise AssertionError(message)
+          Parser().feed(text)
+          match = re.search(r'<script type="application/ld\+json">(.*?)</script>', text, re.S)
+          assert match, 'JSON-LD missing'
+          data = json.loads(match.group(1))
+          assert data['@context'] == 'https://schema.org'
+          assert len(data['@graph']) >= 2
+          assert text.count('id="cybershield"') == 1
+          assert text.count('id="vciso"') == 1
+          assert text.count('id="governance"') == 1
+          PY
 
       - name: Verify public CyberShield destinations
         shell: bash
@@ -63,9 +92,7 @@ jobs:
           python3 -m http.server 4173 --bind 127.0.0.1 --directory site > /tmp/mjc-site-http.log 2>&1 &
           echo $! > /tmp/mjc-site-http.pid
           for attempt in {1..20}; do
-            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then
-              exit 0
-            fi
+            if curl --fail --silent http://127.0.0.1:4173/ > /dev/null; then exit 0; fi
             sleep 0.5
           done
           cat /tmp/mjc-site-http.log
@@ -92,6 +119,7 @@ jobs:
           "$CHROME" --headless=new --no-sandbox --disable-gpu --virtual-time-budget=4000 --dump-dom http://127.0.0.1:4173/ > artifacts/mjc-site-dom.html
           grep -Fq 'Before your organization acts on AI' artifacts/mjc-site-dom.html
           grep -Fq 'Challenge One AI Recommendation' artifacts/mjc-site-dom.html
+          grep -Fq 'One authority platform. Three clear pathways.' artifacts/mjc-site-dom.html
 
       - name: Upload review evidence
         if: always()
@@ -106,7 +134,5 @@ jobs:
         if: always()
         shell: bash
         run: |
-          if test -f /tmp/mjc-site-http.pid; then
-            kill "$(cat /tmp/mjc-site-http.pid)" || true
-          fi
+          if test -f /tmp/mjc-site-http.pid; then kill "$(cat /tmp/mjc-site-http.pid)" || true; fi
           cat /tmp/mjc-site-http.log || true
