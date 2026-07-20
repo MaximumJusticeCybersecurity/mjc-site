@@ -1,52 +1,43 @@
 # Maximum Justice Cybersecurity
 
-Maximum Justice Cybersecurity is an expert-led cybersecurity and AI governance firm founded by Dr. Max Justice.
+Maximum Justice Cybersecurity is an expert-led cybersecurity, AI governance, vCISO, and AI Decision Assurance firm founded by Dr. Max Justice.
 
-Current product and proof engine: CyberShield AI Decision Assurance.
+Primary category:
+Operational AI Trust and AI Decision Assurance.
+
+Current product and proof engine:
+CyberShield.
 
 Current product flow:
 AI-generated recommendation in -> defensible AI Trust Decision Record out.
 
-First proof point:
-AI-generated vendor-risk recommendation review.
-
 Primary customer action:
 Challenge One AI Recommendation.
 
-Secondary customer action:
-See the 3-Minute Vendor-Risk Example.
+Primary visitor pathways:
+- CyberShield and AI Decision Assurance.
+- vCISO and executive cybersecurity leadership.
+- AI governance, vendor risk, GRC, and compliance advisory.
 
-Commercial next step:
-Discuss a controlled 3-to-5 recommendation pilot.  Pilot pricing and delivery schedule are confirmed after scope review.
+First CyberShield proof point:
+AI-generated vendor-risk recommendation review.
 
-Primary concepts:
-- AI Decision Assurance
-- AI Trust Decision Record
-- Vendor-risk AI recommendation review
-- Claims and evidence gaps
-- Risk If Wrong
-- Confidence limits
-- Required human review
-- AI governance
-- vCISO advisory
-- Executive Operational Visibility
+CyberShield separates claims, maps evidence, identifies missing and contradictory support, classifies Risk If Wrong, records confidence limits, determines required human review, and preserves the strongest defensible action and accountable human disposition.
 
-CyberShield does not treat a second model opinion as proof.  It separates claims, maps evidence, identifies missing and contradictory support, applies defined checks, classifies consequence, and preserves the accountable human decision.
+CyberShield does not treat a second model opinion as proof. It does not autonomously approve vendors, accept risk, certify compliance, or replace accountable human authority.
 
-CyberShield does not autonomously approve vendors, accept risk, certify compliance, or replace accountable human authority.
+Current authority positioning:
+Dr. Max Justice is a vCISO, Security SME, Cybersecurity SME, CISSP, PMP, LSSBB, Ph.D., MBA, U.S. veteran, and founder of Maximum Justice Cybersecurity. He has more than 25 years of cybersecurity, technology, program, and executive leadership experience.
 
-Executive Operational Visibility remains the broader MJC outcome.  TrustMap is preserved or future capability and is not the current primary conversion path.
-
-Dr. Max Justice is a CISSP, Ph.D., vCISO, Security SME, Cybersecurity SME, U.S. veteran, and founder of Maximum Justice Cybersecurity.
-
-Recruiting and talent classification:
-Dr. Max Justice is available for AI security, AI governance, vCISO, fractional CISO, cybersecurity executive, cloud security, enterprise architecture, GRC, program leadership, advisory, consulting, W-2, 1099, and contract opportunities. He is Public Trust eligible and is not seeking roles that require an active national-security clearance.
-
-Public AI security / CISO profile:
-https://app.maximumjusticecybersecurity.com/ai-security-ciso-profile.html
-
-Current calls to action:
+Current public calls to action:
 - Challenge One AI Recommendation: https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html
-- See the Vendor-Risk Example: https://maximumjusticecybersecurity.github.io/CyberShield/
+- See the 3-Minute Vendor-Risk Example: https://maximumjusticecybersecurity.github.io/CyberShield/
 - Schedule a Scope Conversation: https://calendly.com/maxjustice
 - Contact Dr. Max Justice: mailto:max@maximumjusticecybersecurity.com
+- AI Security and CISO Profile: https://app.maximumjusticecybersecurity.com/ai-security-ciso-profile.html
+
+Positioning boundaries:
+- TrustMap is not the current primary conversion path.
+- Do not describe planned runtime, agent, or production capabilities as operational.
+- Do not imply autonomous approval, compliance certification, guaranteed risk reduction, or unsupported client outcomes.
+- Preserve commercial, public-sector, regulated-industry, and executive applicability; the Capitol visual identity does not mean MJC serves only federal clients.
