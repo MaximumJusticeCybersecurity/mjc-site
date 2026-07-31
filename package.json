@@ -8,7 +8,9 @@
     "start": "node server.mjs",
     "test:email-gate": "node --test tests/local-digital-brain-email-gate.test.cjs && node --test tests/local-digital-brain-build.test.mjs",
     "evidence:email-gate": "node tests/local-digital-brain-evidence.mjs",
-    "check:email-gate": "npm run build && npm run test:email-gate && npm run evidence:email-gate"
+    "check:email-gate": "npm run build && npm run test:email-gate && npm run evidence:email-gate",
+    "test:security-posture": "node --test tests/site-security-posture.test.mjs",
+    "check:security-posture": "npm run build && npm run test:security-posture"
   },
   "engines": {
     "node": ">=18"
