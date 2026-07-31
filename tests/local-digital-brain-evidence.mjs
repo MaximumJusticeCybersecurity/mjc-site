@@ -6,7 +6,7 @@ const email = ['evidence-reader', 'example.test'].join('@');
 Object.assign(process.env, {
   RESEND_API_KEY: 'test-key',
   LOCAL_DIGITAL_BRAIN_LEAD_TO: ['guide-access', 'example.test'].join('@'),
-  LOCAL_DIGITAL_BRAIN_LEAD_FROM: ['MJC Guide', '<guide', 'example.test>'].join(' '),
+  LOCAL_DIGITAL_BRAIN_LEAD_FROM: ['MJC Guide <guide', 'example.test>'].join('@'),
   LOCAL_DIGITAL_BRAIN_IDEMPOTENCY_SALT: 'test-only-idempotency-salt',
   LOCAL_DIGITAL_BRAIN_ALLOWED_ORIGINS: 'http://127.0.0.1:4173'
 });
