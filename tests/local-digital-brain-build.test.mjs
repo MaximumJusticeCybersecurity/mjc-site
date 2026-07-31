@@ -7,6 +7,7 @@ const landing = await readFile('dist/local-digital-brain.html', 'utf8');
 const homepage = await readFile('dist/index.html', 'utf8');
 const client = await readFile('dist/local-digital-brain-gate.js', 'utf8');
 const stylesheet = await readFile('dist/local-digital-brain-gate.css', 'utf8');
+const squarespaceWidget = await readFile('dist/whitaker-widget.js', 'utf8');
 const vercel = JSON.parse(await readFile('vercel.json', 'utf8'));
 
 test('built guide is locked by default and preserves guide capabilities', () => {
@@ -33,6 +34,17 @@ test('MJC homepage exposes the email-gated guide download call to action', () =>
   assert.match(homepage, /Enter your email to unlock the complete Local Digital Brain Starter Guide/);
   assert.match(homepage, /Download the Free Guide/);
   assert.doesNotMatch(homepage, /local-digital-brain-guide\.html/);
+});
+
+test('Squarespace Whitaker bundle exposes the guide on the public homepage', () => {
+  assert.match(squarespaceWidget, /www\.maximumjusticecybersecurity\.com/);
+  assert.match(squarespaceWidget, /mjc-local-brain-guide-promo/);
+  assert.match(squarespaceWidget, /https:\/\/app\.maximumjusticecybersecurity\.com\/local-digital-brain-guide/);
+  assert.match(squarespaceWidget, /Enter your email to unlock the guide/);
+  assert.match(squarespaceWidget, /Download the Free Guide/);
+  assert.match(squarespaceWidget, /local_brain_guide_clicked/);
+  assert.match(squarespaceWidget, /window\.location\.pathname !== '\/'/);
+  assert.doesNotMatch(squarespaceWidget, /local-digital-brain-guide\.html/);
 });
 
 test('client unlocks only from a successful server response and stores no email', () => {
