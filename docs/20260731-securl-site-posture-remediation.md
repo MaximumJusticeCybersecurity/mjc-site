@@ -33,6 +33,17 @@ The shared report pages are client-rendered. Their detailed finding payload was 
 
 The CSP is constrained to the site origin except for the approved Whitaker voice runtime. It blocks plugins and framing, restricts form submission, upgrades insecure requests, and does not permit `unsafe-eval`.
 
+### Route-scoped resource isolation
+
+`Cross-Origin-Resource-Policy: same-origin` is applied to the four public HTML document routes:
+
+- `/`
+- `/local-digital-brain`
+- `/local-digital-brain-guide`
+- `/ai-security-ciso-profile`
+
+CORP is intentionally not applied as a catch-all header. MJC serves Whitaker JavaScript from the application domain for use by a Squarespace origin, and a blanket same-origin policy would block that approved cross-origin script distribution path.
+
 ### Security disclosure contact
 
 The build now publishes `/.well-known/security.txt` with:
@@ -46,7 +57,7 @@ The record must be renewed before its expiration date.
 
 ### Regression protection
 
-A deterministic test validates the security headers, critical CSP directives, and the built `security.txt` artifact. A dedicated GitHub Actions workflow runs this check for relevant pull requests and changes to `main`.
+A deterministic test validates the global security headers, route-scoped CORP behavior, critical CSP directives, and the built `security.txt` artifact. A dedicated GitHub Actions workflow runs this check for relevant pull requests and changes to `main`.
 
 ## Already platform-owned
 
@@ -56,17 +67,15 @@ TLS certificate issuance, protocol support, and edge redirect behavior remain de
 
 ## Constrained or deferred
 
-### Cross-Origin-Resource-Policy
+### Wider Cross-Origin-Resource-Policy coverage
 
-A blanket `Cross-Origin-Resource-Policy: same-origin` header was not added. MJC intentionally serves Whitaker JavaScript from the application domain for use by a Squarespace origin. A global same-origin CORP policy would block that approved cross-origin script distribution path.
-
-Follow-on options:
+Document routes now enforce same-origin CORP, while distributable Whitaker assets remain outside the blanket policy. Follow-on options for broader coverage are:
 
 1. Move distributable widget assets to a dedicated host or route with an explicit `cross-origin` resource policy, while keeping site documents and private assets `same-origin`.
 2. Replace the current cross-origin distribution model and then apply `same-origin` globally.
-3. Add route-specific Vercel behavior only after preview evidence proves that duplicate or overlapping header rules do not produce ambiguous browser behavior.
+3. Add asset-class-specific policies only after preview evidence confirms the intended Squarespace loading path remains functional.
 
-This is a documented compatibility constraint, not a scanner-score exception.
+This is a documented compatibility boundary, not a scanner-score exception.
 
 ### Inline script and style allowances
 
@@ -90,8 +99,9 @@ Before merge or production release:
 2. Inspect preview response headers for `/`, the guide route, the lead API route, and `/.well-known/security.txt`.
 3. Confirm navigation, email capture, Whitaker browser fallback, and server TTS still work.
 4. Verify the site is not unintentionally frameable.
-5. Re-run the external scans against the exact production URLs and compare deltas.
-6. Record any remaining findings as accepted, constrained, deferred, rejected, or platform-owned.
+5. Confirm Whitaker JavaScript remains loadable from the approved Squarespace origin.
+6. Re-run the external scans against the exact production URLs and compare deltas.
+7. Record any remaining findings as accepted, constrained, deferred, rejected, or platform-owned.
 
 ## Rollback
 
