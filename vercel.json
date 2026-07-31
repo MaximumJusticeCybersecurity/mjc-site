@@ -4,6 +4,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
+    { "source": "/local-digital-brain-lead", "destination": "/api/local-digital-brain-access" },
+    { "source": "/local-digital-brain-guide", "destination": "/local-digital-brain-guide.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
