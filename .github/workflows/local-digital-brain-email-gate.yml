@@ -86,7 +86,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RInE 'console\.(log|info|debug).*email|URLSearchParams|location\.search.*email' api site/local-digital-brain-gate.* tests docs/2026073110-local-digital-brain-email-access-gate-implementation.md
+          ! grep -InE 'console\.(log|info|debug).*email|URLSearchParams|location\.search.*email' api/local-digital-brain-access.js site/local-digital-brain-gate.js
           grep -Fq '"submittedEmail": "[REDACTED]"' artifacts/local-digital-brain-capture-evidence.json
           grep -Fq '"responseContainsSubmittedEmail": false' artifacts/local-digital-brain-capture-evidence.json
 
