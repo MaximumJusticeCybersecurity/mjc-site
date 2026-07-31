@@ -105,8 +105,19 @@ function isAllowedOrigin(origin, env = process.env) {
 }
 
 function clientAddress(req) {
+  const vercelForwarded = readHeader(req, 'x-vercel-forwarded-for').split(',')[0].trim();
   const forwarded = readHeader(req, 'x-forwarded-for').split(',')[0].trim();
-  return forwarded || req.socket?.remoteAddress || 'unknown';
+  return vercelForwarded || forwarded || req.socket?.remoteAddress || 'unknown';
+}
+
+function pruneRateBuckets(now) {
+  if (RATE_BUCKETS.size < 1_000) return;
+  for (const [key, bucket] of RATE_BUCKETS) {
+    if (bucket.resetAt <= now) RATE_BUCKETS.delete(key);
+  }
+  while (RATE_BUCKETS.size > 5_000) {
+    RATE_BUCKETS.delete(RATE_BUCKETS.keys().next().value);
+  }
 }
 
 function consumeRateLimit(key, now, env = process.env) {
@@ -121,6 +132,7 @@ function consumeRateLimit(key, now, env = process.env) {
     24 * 60 * 60 * 1000
   );
 
+  pruneRateBuckets(now);
   const current = RATE_BUCKETS.get(key);
   if (!current || current.resetAt <= now) {
     RATE_BUCKETS.set(key, { count: 1, resetAt: now + windowMs });
@@ -158,12 +170,12 @@ function idempotencyKey(email, now, env = process.env) {
   return `local-digital-brain/${dayKey(now)}/${digest}`;
 }
 
-function leadMessage(email, capturedAt) {
+function leadMessage(email, capturedDate) {
   return [
     'New Local Digital Brain Starter Guide access request',
     '',
     `Email: ${email}`,
-    `Captured at: ${capturedAt}`,
+    `Captured date (UTC): ${capturedDate}`,
     'Source: local-digital-brain-guide',
     '',
     'Purpose: provide guide access and understand guide usage.'
@@ -191,7 +203,7 @@ async function deliverLead(email, now, env = process.env, fetchImpl = globalThis
         from: env.LOCAL_DIGITAL_BRAIN_LEAD_FROM,
         to: [env.LOCAL_DIGITAL_BRAIN_LEAD_TO],
         subject: 'Local Digital Brain guide access request',
-        text: leadMessage(email, new Date(now).toISOString())
+        text: leadMessage(email, dayKey(now))
       }),
       signal: controller.signal
     });
