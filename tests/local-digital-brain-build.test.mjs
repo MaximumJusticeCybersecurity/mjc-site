@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 
 const guide = await readFile('dist/local-digital-brain-guide.html', 'utf8');
 const landing = await readFile('dist/local-digital-brain.html', 'utf8');
+const homepage = await readFile('dist/index.html', 'utf8');
 const client = await readFile('dist/local-digital-brain-gate.js', 'utf8');
 const stylesheet = await readFile('dist/local-digital-brain-gate.css', 'utf8');
 const vercel = JSON.parse(await readFile('vercel.json', 'utf8'));
@@ -23,6 +24,15 @@ test('built guide is locked by default and preserves guide capabilities', () => 
 test('landing page guide calls to action use the canonical clean route', () => {
   assert.match(landing, /href="\/local-digital-brain-guide"/);
   assert.doesNotMatch(landing, /href="(?:\.\/|\/)local-digital-brain-guide\.html"/);
+});
+
+test('MJC homepage exposes the email-gated guide download call to action', () => {
+  assert.match(homepage, /id="local-digital-brain"/);
+  assert.match(homepage, /data-event="local_brain_guide_clicked"/);
+  assert.match(homepage, /href="\/local-digital-brain-guide"/);
+  assert.match(homepage, /Enter your email to unlock the complete Local Digital Brain Starter Guide/);
+  assert.match(homepage, /Download the Free Guide/);
+  assert.doesNotMatch(homepage, /local-digital-brain-guide\.html/);
 });
 
 test('client unlocks only from a successful server response and stores no email', () => {
