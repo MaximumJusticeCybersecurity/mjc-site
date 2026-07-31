@@ -14,10 +14,35 @@ const requiredHeaders = {
   'X-Frame-Options': 'DENY'
 };
 
+const documentRoutes = [
+  '/',
+  '/local-digital-brain',
+  '/local-digital-brain-guide',
+  '/ai-security-ciso-profile'
+];
+
 test('Vercel applies the approved security headers to every route', () => {
   assert.ok(globalRule, 'Missing catch-all security-header rule');
   for (const [key, expectedValue] of Object.entries(requiredHeaders)) {
     assert.equal(headerMap.get(key), expectedValue, `${key} is missing or changed`);
+  }
+});
+
+test('CORP protects document routes without blocking distributable Whitaker scripts', () => {
+  assert.equal(
+    headerMap.has('Cross-Origin-Resource-Policy'),
+    false,
+    'CORP must not be applied globally because Whitaker scripts are consumed cross-origin'
+  );
+
+  for (const source of documentRoutes) {
+    const rule = config.headers?.find((candidate) => candidate.source === source);
+    const headers = new Map((rule?.headers || []).map(({ key, value }) => [key, value]));
+    assert.equal(
+      headers.get('Cross-Origin-Resource-Policy'),
+      'same-origin',
+      `Document route ${source} must enforce same-origin CORP`
+    );
   }
 });
 
