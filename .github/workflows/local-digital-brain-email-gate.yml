@@ -1,0 +1,107 @@
+name: Local Digital Brain Email Gate
+
+on:
+  pull_request:
+    paths:
+      - api/local-digital-brain-access.js
+      - site/local-digital-brain-gate.js
+      - site/local-digital-brain-gate.css
+      - site/local-digital-brain-guide.html
+      - site/local-digital-brain.html
+      - build.mjs
+      - package.json
+      - vercel.json
+      - tests/local-digital-brain-*.js
+      - tests/local-digital-brain-*.cjs
+      - tests/local-digital-brain-*.mjs
+      - docs/2026073110-local-digital-brain-email-access-gate-*.md
+      - .github/workflows/local-digital-brain-email-gate.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out reviewed commit
+        uses: actions/checkout@v4
+
+      - name: Record runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          npm --version
+
+      - name: Build, test, and produce redacted contract evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run check:email-gate 2>&1 | tee local-digital-brain-email-gate-test.log
+          mkdir -p artifacts
+          mv local-digital-brain-email-gate-test.log artifacts/
+
+      - name: Start built site
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --bind 127.0.0.1 --directory dist > /tmp/mjc-site-http.log 2>&1 &
+          echo $! > /tmp/mjc-site-http.pid
+          for attempt in {1..20}; do
+            if curl --fail --silent http://127.0.0.1:4173/local-digital-brain-guide.html > /dev/null; then exit 0; fi
+            sleep 0.5
+          done
+          cat /tmp/mjc-site-http.log
+          exit 1
+
+      - name: Locate Chrome
+        id: chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome-stable || command -v google-chrome || command -v chromium-browser || command -v chromium || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: Render locked desktop and mobile evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          CHROME='${{ steps.chrome.outputs.path }}'
+          GUIDE='http://127.0.0.1:4173/local-digital-brain-guide.html'
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=4000 --window-size=1440,1200 --screenshot="$PWD/artifacts/local-digital-brain-gate-desktop.png" "$GUIDE"
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --run-all-compositor-stages-before-draw --virtual-time-budget=4000 --window-size=390,844 --screenshot="$PWD/artifacts/local-digital-brain-gate-mobile.png" "$GUIDE"
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --virtual-time-budget=4000 --dump-dom "$GUIDE" > artifacts/local-digital-brain-gate-dom.html
+          grep -Fq 'Open the Local Digital Brain Starter Guide' artifacts/local-digital-brain-gate-dom.html
+          grep -Fq 'type="email"' artifacts/local-digital-brain-gate-dom.html
+          grep -Fq 'This submission does not enroll you in a newsletter.' artifacts/local-digital-brain-gate-dom.html
+          grep -Fq 'class="guide-locked"' artifacts/local-digital-brain-gate-dom.html
+
+      - name: Verify no captured-email leak surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RInE 'console\.(log|info|debug).*email|URLSearchParams|location\.search.*email' api site/local-digital-brain-gate.* tests docs/2026073110-local-digital-brain-email-access-gate-implementation.md
+          grep -Fq '"submittedEmail": "[REDACTED]"' artifacts/local-digital-brain-capture-evidence.json
+          grep -Fq '"responseContainsSubmittedEmail": false' artifacts/local-digital-brain-capture-evidence.json
+
+      - name: Upload review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: local-digital-brain-email-gate-evidence
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Stop local site
+        if: always()
+        shell: bash
+        run: |
+          if test -f /tmp/mjc-site-http.pid; then kill "$(cat /tmp/mjc-site-http.pid)" || true; fi
+          cat /tmp/mjc-site-http.log || true
