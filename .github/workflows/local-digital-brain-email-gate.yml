@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - api/local-digital-brain-access.js
+      - site/index.html
       - site/local-digital-brain-gate.js
       - site/local-digital-brain-gate.css
       - site/local-digital-brain-guide.html
