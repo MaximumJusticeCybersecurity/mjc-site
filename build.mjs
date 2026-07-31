@@ -74,10 +74,24 @@ async function injectGuideGate() {
   await writeFile(guidePath, html, 'utf8');
 }
 
+async function bundleSquarespaceGuidePromotion() {
+  const widgetPath = path.join('dist', 'whitaker-widget.js');
+  const promoPath = path.join('dist', 'squarespace-local-brain-guide.js');
+  const [widget, promo] = await Promise.all([
+    readFile(widgetPath, 'utf8'),
+    readFile(promoPath, 'utf8')
+  ]);
+  if (widget.includes('mjc-local-brain-guide-promo')) {
+    throw new Error('Squarespace guide promotion was already bundled.');
+  }
+  await writeFile(widgetPath, `${widget}\n\n${promo}\n`, 'utf8');
+}
+
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await cp('site', 'dist', { recursive: true });
 await normalizeGuideLinks('dist');
 await injectGuideGate();
+await bundleSquarespaceGuidePromotion();
 await injectWhitaker('dist');
-console.log('MJC website copied to dist/, guide access gate applied, and Whitaker injected.');
+console.log('MJC website copied to dist/, guide access gate applied, Squarespace guide promotion bundled, and Whitaker injected.');
