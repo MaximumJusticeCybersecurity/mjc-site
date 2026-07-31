@@ -14,7 +14,7 @@ function applyEnvironment(overrides = {}) {
   Object.assign(process.env, {
     RESEND_API_KEY: 'test-key',
     LOCAL_DIGITAL_BRAIN_LEAD_TO: ['guide-access', 'example.test'].join('@'),
-    LOCAL_DIGITAL_BRAIN_LEAD_FROM: ['MJC Guide', '<guide', 'example.test>'].join(' '),
+    LOCAL_DIGITAL_BRAIN_LEAD_FROM: ['MJC Guide <guide', 'example.test>'].join('@'),
     LOCAL_DIGITAL_BRAIN_IDEMPOTENCY_SALT: 'test-only-idempotency-salt',
     LOCAL_DIGITAL_BRAIN_ALLOWED_ORIGINS: 'https://preview.example.test',
     LOCAL_DIGITAL_BRAIN_RATE_LIMIT_MAX: '5',
@@ -123,10 +123,12 @@ test('fails visibly on provider timeout', async () => {
   assert.deepEqual(result.payload, { ok: false, code: 'LEAD_DESTINATION_TIMEOUT' });
 });
 
-test('uses the same provider idempotency key for duplicate same-day submissions', async () => {
+test('uses the same provider idempotency key and payload for duplicate same-day submissions', async () => {
   const keys = [];
+  const bodies = [];
   global.fetch = async (_url, options) => {
     keys.push(options.headers['Idempotency-Key']);
+    bodies.push(options.body);
     return { ok: true, status: 200, json: async () => ({ id: 'receipt-test-duplicate' }) };
   };
   const first = await invoke({ email: syntheticEmail(), website: '' }, { address: '192.0.2.20' });
@@ -135,6 +137,7 @@ test('uses the same provider idempotency key for duplicate same-day submissions'
   assert.equal(second.statusCode, 200);
   assert.equal(keys.length, 2);
   assert.equal(keys[0], keys[1]);
+  assert.equal(bodies[0], bodies[1]);
 });
 
 test('rate limits repeated submissions before provider delivery', async () => {
