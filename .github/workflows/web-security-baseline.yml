@@ -1,0 +1,88 @@
+name: Web Security Baseline
+
+on:
+  pull_request:
+    paths:
+      - vercel.json
+      - api/**
+      - site/.well-known/security.txt
+      - docs/20260818-mjc-web-security-baseline.md
+      - .github/workflows/web-security-baseline.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out reviewed commit
+        uses: actions/checkout@v4
+
+      - name: Validate source-controlled web security controls
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import re
+          from datetime import datetime, timezone
+
+          cfg = json.loads(Path('vercel.json').read_text(encoding='utf-8'))
+          blocks = cfg.get('headers') or []
+          assert blocks, 'vercel.json must define source-controlled security headers'
+
+          merged = {}
+          for block in blocks:
+              if block.get('source') == '/(.*)':
+                  for item in block.get('headers', []):
+                      merged[item['key'].lower()] = item['value']
+
+          required = {
+              'content-security-policy',
+              'strict-transport-security',
+              'x-content-type-options',
+              'referrer-policy',
+              'permissions-policy',
+          }
+          missing = required - set(merged)
+          assert not missing, f'missing required headers: {sorted(missing)}'
+
+          csp = merged['content-security-policy']
+          for directive in ["default-src 'self'", "object-src 'none'", "frame-ancestors 'none'", "base-uri 'self'", 'upgrade-insecure-requests']:
+              assert directive in csp, f'CSP missing required directive: {directive}'
+
+          assert merged['x-content-type-options'].lower() == 'nosniff'
+          assert merged['referrer-policy'] == 'strict-origin-when-cross-origin'
+
+          hsts = merged['strict-transport-security']
+          match = re.search(r'max-age=(\d+)', hsts)
+          assert match and int(match.group(1)) >= 31536000, 'HSTS max-age must be at least one year'
+
+          security_txt = Path('site/.well-known/security.txt').read_text(encoding='utf-8')
+          for field in ['Contact:', 'Expires:', 'Canonical:']:
+              assert field in security_txt, f'security.txt missing {field}'
+          expires_line = next(line for line in security_txt.splitlines() if line.startswith('Expires:'))
+          expires = datetime.fromisoformat(expires_line.split(': ', 1)[1].replace('Z', '+00:00'))
+          assert expires > datetime.now(timezone.utc), 'security.txt is expired'
+
+          api = Path('api/local-digital-brain-access.js').read_text(encoding='utf-8')
+          invariants = [
+              "req.method !== 'POST'",
+              "application/json",
+              'MAX_BODY_BYTES',
+              'isAllowedOrigin',
+              "X-Content-Type-Options",
+              "Cache-Control",
+          ]
+          for invariant in invariants:
+              assert invariant in api, f'lead API lost expected control: {invariant}'
+          assert "Access-Control-Allow-Origin', '*'" not in api
+          assert 'Access-Control-Allow-Origin: *' not in api
+
+          if 'const RATE_BUCKETS = new Map()' in api:
+              print('::warning::Production lead API still uses process-local rate-limit state. Track durable/shared rate limiting as P1 remediation.')
+          PY
