@@ -1,0 +1,4 @@
+Contact: mailto:max@maximumjusticecybersecurity.com
+Expires: 2027-08-18T23:59:59Z
+Preferred-Languages: en
+Canonical: https://app.maximumjusticecybersecurity.com/.well-known/security.txt
