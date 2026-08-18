@@ -9,7 +9,7 @@ on:
       - "site/**"
       - "tests/site-security-posture.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
-      - ".github/workflows/site-security-posture.yml"
+      - ".github/workflows/**"
   push:
     branches:
       - main
@@ -20,7 +20,7 @@ on:
       - "site/**"
       - "tests/site-security-posture.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
-      - ".github/workflows/site-security-posture.yml"
+      - ".github/workflows/**"
 
 permissions:
   contents: read
