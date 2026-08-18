@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const handler = require('../api/local-digital-brain-access.js');
-const { resetRateLimits } = handler._test;
+const { allowedOrigins, resetRateLimits } = handler._test;
 
 const ORIGINAL_ENV = { ...process.env };
 const ORIGINAL_FETCH = global.fetch;
@@ -82,7 +82,7 @@ test('rejects empty and malformed email values with accessible client-safe codes
   }
 });
 
-test('delivers a valid lead before returning a bounded unlock expiration', async () => {
+test('delivers a valid lead before returning a bounded unlock expiration without provider metadata', async () => {
   let providerRequest;
   global.fetch = async (url, options) => {
     providerRequest = { url, options };
@@ -94,12 +94,28 @@ test('delivers a valid lead before returning a bounded unlock expiration', async
   assert.equal(result.payload.ok, true);
   assert.equal(result.payload.code, 'ACCESS_GRANTED');
   assert.ok(Date.parse(result.payload.accessExpiresAt) > Date.now());
-  assert.deepEqual(result.payload.receipt, { provider: 'resend', id: 'receipt-test-002' });
+  assert.equal(Object.hasOwn(result.payload, 'receipt'), false);
+  assert.equal(JSON.stringify(result.payload).includes('resend'), false);
+  assert.equal(JSON.stringify(result.payload).includes('receipt-test-002'), false);
   assert.equal(providerRequest.url, 'https://api.resend.com/emails');
   assert.match(providerRequest.options.headers.Authorization, /^Bearer /);
   assert.match(providerRequest.options.headers['Idempotency-Key'], /^local-digital-brain\//);
   assert.equal(JSON.parse(providerRequest.options.body).text.includes(email), true);
   assert.equal(JSON.stringify(result.payload).includes(email), false);
+});
+
+test('canonical default origin is the application domain; other MJC origins require explicit configuration', () => {
+  const defaults = allowedOrigins({ LOCAL_DIGITAL_BRAIN_ALLOWED_ORIGINS: '', VERCEL_URL: '' });
+  assert.equal(defaults.has('https://app.maximumjusticecybersecurity.com'), true);
+  assert.equal(defaults.has('https://maximumjusticecybersecurity.com'), false);
+  assert.equal(defaults.has('https://www.maximumjusticecybersecurity.com'), false);
+
+  const configured = allowedOrigins({
+    LOCAL_DIGITAL_BRAIN_ALLOWED_ORIGINS: 'https://maximumjusticecybersecurity.com',
+    VERCEL_URL: 'preview.example.vercel.app'
+  });
+  assert.equal(configured.has('https://maximumjusticecybersecurity.com'), true);
+  assert.equal(configured.has('https://preview.example.vercel.app'), true);
 });
 
 test('does not grant access when the provider rejects delivery', async () => {
