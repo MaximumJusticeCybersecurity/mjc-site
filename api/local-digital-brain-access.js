@@ -86,11 +86,7 @@ function allowedOrigins(env = process.env) {
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean);
-  const defaults = [
-    'https://app.maximumjusticecybersecurity.com',
-    'https://maximumjusticecybersecurity.com',
-    'https://www.maximumjusticecybersecurity.com'
-  ];
+  const defaults = ['https://app.maximumjusticecybersecurity.com'];
   if (env.VERCEL_URL) defaults.push(`https://${env.VERCEL_URL}`);
   return new Set([...defaults, ...configured]);
 }
@@ -267,7 +263,7 @@ async function handler(req, res) {
   }
 
   try {
-    const receipt = await deliverLead(email, now);
+    await deliverLead(email, now);
     const ttlDays = parsePositiveInteger(
       process.env.LOCAL_DIGITAL_BRAIN_ACCESS_TTL_DAYS,
       DEFAULT_ACCESS_TTL_DAYS,
@@ -276,8 +272,7 @@ async function handler(req, res) {
     return sendJson(res, 200, {
       ok: true,
       code: 'ACCESS_GRANTED',
-      accessExpiresAt: new Date(now + ttlDays * 24 * 60 * 60 * 1000).toISOString(),
-      receipt: { provider: receipt.provider, id: receipt.receiptId }
+      accessExpiresAt: new Date(now + ttlDays * 24 * 60 * 60 * 1000).toISOString()
     });
   } catch (error) {
     const code = error?.name === 'AbortError' ? 'LEAD_DESTINATION_TIMEOUT' : 'LEAD_DELIVERY_FAILED';
