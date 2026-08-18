@@ -83,13 +83,15 @@ jobs:
           grep -Fq 'This submission does not enroll you in a newsletter.' artifacts/local-digital-brain-gate-dom.html
           grep -Fq 'class="guide-locked"' artifacts/local-digital-brain-gate-dom.html
 
-      - name: Verify no captured-email leak surfaces
+      - name: Verify no captured-email or provider-metadata leak surfaces
         shell: bash
         run: |
           set -euo pipefail
           ! grep -InE 'console\.(log|info|debug).*email|URLSearchParams|location\.search.*email' api/local-digital-brain-access.js site/local-digital-brain-gate.js
           grep -Fq '"submittedEmail": "[REDACTED]"' artifacts/local-digital-brain-capture-evidence.json
           grep -Fq '"responseContainsSubmittedEmail": false' artifacts/local-digital-brain-capture-evidence.json
+          grep -Fq '"responseContainsProviderReceipt": false' artifacts/local-digital-brain-capture-evidence.json
+          grep -Fq '"responseContainsProviderIdentity": false' artifacts/local-digital-brain-capture-evidence.json
 
       - name: Upload review evidence
         if: always()
