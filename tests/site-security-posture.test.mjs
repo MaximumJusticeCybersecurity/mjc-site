@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import test from 'node:test';
 
 const config = JSON.parse(readFileSync(new URL('../vercel.json', import.meta.url), 'utf8'));
@@ -84,4 +84,28 @@ test('security.txt is published, canonical, and unexpired', () => {
   const expiresAt = Date.parse(expiresMatch[1]);
   assert.ok(Number.isFinite(expiresAt), 'security.txt Expires must be a valid timestamp');
   assert.ok(expiresAt > Date.now(), 'security.txt has expired and must be renewed');
+});
+
+test('external GitHub Actions are pinned to immutable commit SHAs', () => {
+  const workflowsDirectory = new URL('../.github/workflows/', import.meta.url);
+  const workflowFiles = readdirSync(workflowsDirectory)
+    .filter((name) => name.endsWith('.yml') || name.endsWith('.yaml'));
+
+  const mutableRefs = [];
+  const usesPattern = /\buses:\s*([^\s#]+)@([^\s#]+)/g;
+
+  for (const filename of workflowFiles) {
+    const source = readFileSync(new URL(filename, workflowsDirectory), 'utf8');
+    for (const match of source.matchAll(usesPattern)) {
+      const [, action, ref] = match;
+      if (action.startsWith('./') || action.startsWith('docker://')) continue;
+      if (!/^[0-9a-f]{40}$/i.test(ref)) mutableRefs.push(`${filename}: ${action}@${ref}`);
+    }
+  }
+
+  assert.deepEqual(
+    mutableRefs,
+    [],
+    `External Actions must use immutable 40-character commit SHAs:\n${mutableRefs.join('\n')}`
+  );
 });
