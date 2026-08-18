@@ -1,0 +1,49 @@
+name: Site Security Posture
+
+on:
+  pull_request:
+    paths:
+      - "vercel.json"
+      - "package.json"
+      - "build.mjs"
+      - "site/**"
+      - "tests/site-security-posture.test.mjs"
+      - "docs/20260818-mjc-web-security-baseline.md"
+      - ".github/workflows/site-security-posture.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "vercel.json"
+      - "package.json"
+      - "build.mjs"
+      - "site/**"
+      - "tests/site-security-posture.test.mjs"
+      - "docs/20260818-mjc-web-security-baseline.md"
+      - ".github/workflows/site-security-posture.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: site-security-posture-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install package metadata
+        run: npm install --ignore-scripts --no-audit --no-fund
+
+      - name: Validate site security posture
+        run: npm run check:security-posture
