@@ -23,7 +23,8 @@ permissions:
   contents: read
 
 jobs:
-  validate:
+  local-digital-brain-email-gate:
+    name: Local Digital Brain Email Gate
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
