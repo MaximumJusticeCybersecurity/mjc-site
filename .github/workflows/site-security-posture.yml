@@ -30,7 +30,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  site-security-posture:
+    name: Site Security Posture
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
