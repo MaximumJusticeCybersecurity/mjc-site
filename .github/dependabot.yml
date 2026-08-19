@@ -1,0 +1,36 @@
+version: 2
+
+updates:
+  # Keep application dependencies current.
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    groups:
+      routine-npm-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # Keep GitHub Actions current, including our SHA-pinned actions.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    groups:
+      routine-action-updates:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
