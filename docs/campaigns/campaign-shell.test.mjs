@@ -69,6 +69,19 @@ test('water critical red-flag escalation is independent of aggregate band', () =
   assert.match(deriveWaterResult(p, three).redFlagAction, /independent assessment/i);
 });
 
+test('water value sequence is snapshot then provider worksheet with scorecard supplemental', async () => {
+  const html = await readFile('site/water-ready/index.html', 'utf8');
+  const snapshotAt = html.indexOf('Jab #1 · Municipal Water Cyber Assurance Snapshot');
+  const worksheetAt = html.indexOf('Jab #2 · Provider Validation / Executive Evidence Worksheet');
+  const scorecardAt = html.indexOf('Optional supporting decision guidance');
+  assert.ok(snapshotAt >= 0);
+  assert.ok(worksheetAt > snapshotAt);
+  assert.ok(scorecardAt > worksheetAt);
+  assert.match(html, /Owner \| Evidence \| Last Tested \| Gap \| Next Action/);
+  assert.match(html, /this page does not claim a snapshot was performed/i);
+  assert.doesNotMatch(html, /Re-create the scorecard/i);
+});
+
 test('healthcare categories remain non-certification gap summaries', () => {
   const p = profiles.healthcare_v1;
   const a = answersFor(p, 'clear');
