@@ -8,6 +8,7 @@ on:
       - "build.mjs"
       - "site/**"
       - "tests/site-security-posture.test.mjs"
+      - "tests/msp-field-kit.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
       - ".github/workflows/**"
   push:
@@ -19,6 +20,7 @@ on:
       - "build.mjs"
       - "site/**"
       - "tests/site-security-posture.test.mjs"
+      - "tests/msp-field-kit.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
       - ".github/workflows/**"
 
@@ -48,3 +50,6 @@ jobs:
 
       - name: Validate site security posture
         run: npm run check:security-posture
+
+      - name: Validate MSP Decision Assurance field kit
+        run: npm run test:msp-kit
