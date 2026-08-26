@@ -1,0 +1,32 @@
+name: Export Whisper Tool Temp
+on:
+  push:
+    branches:
+      - 'sterling/export-canonical-logo-temp'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build-whisper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build whisper.cpp
+        shell: bash
+        run: |
+          git clone --depth 1 --branch v1.8.6 https://github.com/ggml-org/whisper.cpp.git /tmp/whisper.cpp
+          cmake -S /tmp/whisper.cpp -B /tmp/whisper.cpp/build -DBUILD_SHARED_LIBS=OFF -DWHISPER_BUILD_TESTS=OFF -DWHISPER_BUILD_EXAMPLES=ON -DCMAKE_BUILD_TYPE=Release
+          cmake --build /tmp/whisper.cpp/build --config Release -j 2
+          mkdir -p /tmp/export
+          cp /tmp/whisper.cpp/build/bin/whisper-cli /tmp/export/
+      - name: Download English base model
+        shell: bash
+        run: |
+          curl -L --fail --retry 3 -o /tmp/export/ggml-base.en.bin https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-base.en.bin
+          sha256sum /tmp/export/ggml-base.en.bin
+      - name: Upload whisper tool
+        uses: actions/upload-artifact@v4
+        with:
+          name: whisper-base-en-tool
+          path: /tmp/export/
+          if-no-files-found: error
+          retention-days: 1
