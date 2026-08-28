@@ -10,7 +10,9 @@
     "evidence:email-gate": "node tests/local-digital-brain-evidence.mjs",
     "check:email-gate": "npm run build && npm run test:email-gate && npm run evidence:email-gate",
     "test:security-posture": "node --test tests/site-security-posture.test.mjs",
-    "check:security-posture": "npm run build && npm run test:security-posture"
+    "check:security-posture": "npm run build && npm run test:security-posture",
+    "test:msp-kit": "node --test tests/msp-field-kit.test.mjs",
+    "check:msp-kit": "npm run build && npm run test:msp-kit && npm run test:security-posture"
   },
   "engines": {
     "node": ">=18"
