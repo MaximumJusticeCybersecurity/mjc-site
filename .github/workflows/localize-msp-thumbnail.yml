@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           mkdir -p site/msp-pro-channel-2026/assets
           curl -fL --retry 3 --retry-delay 2 \
-            'https://i.ytimg.com/vi/PHrASbOGVA8/maxresdefault.jpg' \
+            'https://i.ytimg.com/vi/PHrASbOGVA8/hqdefault.jpg' \
             -o site/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg
           test -s site/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg
           python - <<'PY'
