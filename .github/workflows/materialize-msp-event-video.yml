@@ -1,52 +1,69 @@
 name: Materialize MSP Event Video
 
 on:
-  push:
-    branches:
-      - hotfix/self-host-msp-video
-    paths:
-      - .github/workflows/materialize-msp-event-video.yml
   workflow_dispatch:
+    inputs:
+      source_url:
+        description: 'Approved direct HTTPS URL to the source video file (not a YouTube/watch page)'
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
   materialize-video:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: hotfix/self-host-msp-video
           fetch-depth: 0
 
+      - name: Validate approved source
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
+        run: |
+          case "$SOURCE_URL" in
+            https://*) ;;
+            *) echo 'Source must be an approved direct HTTPS URL.' >&2; exit 2 ;;
+          esac
+          case "$SOURCE_URL" in
+            *youtube.com/*|*youtu.be/*)
+              echo 'YouTube/watch URLs are not accepted. Supply an authorized direct-download source artifact.' >&2
+              exit 2
+              ;;
+          esac
+
       - name: Install media tools
         run: |
-          python -m pip install --upgrade yt-dlp
           sudo apt-get update
           sudo apt-get install -y ffmpeg
 
-      - name: Download supplied YouTube video
+      - name: Download approved source artifact
+        env:
+          SOURCE_URL: ${{ inputs.source_url }}
         run: |
           mkdir -p site/msp-pro-channel-2026/assets
-          yt-dlp \
-            --no-playlist \
-            -f 'bv*[height<=720]+ba/b[height<=720]/b' \
-            --merge-output-format mp4 \
-            -o '/tmp/msp-source.%(ext)s' \
-            'https://youtu.be/PHrASbOGVA8'
+          curl --fail --location --proto '=https' --tlsv1.2 \
+            --retry 2 --retry-all-errors \
+            --output /tmp/msp-source \
+            "$SOURCE_URL"
+          test -s /tmp/msp-source
+          ffprobe -v error -show_entries format=format_name,duration,size \
+            -of default=noprint_wrappers=1 /tmp/msp-source
 
       - name: Normalize for first-party web playback
         run: |
-          INPUT=$(find /tmp -maxdepth 1 -type f -name 'msp-source.*' | head -n 1)
-          ffmpeg -y -i "$INPUT" \
+          ffmpeg -y -i /tmp/msp-source \
             -c:v libx264 -preset medium -crf 27 -pix_fmt yuv420p \
             -c:a aac -b:a 128k \
             -movflags +faststart \
             site/msp-pro-channel-2026/assets/msp-channel-pro-walk-talk-2min.mp4
-          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 site/msp-pro-channel-2026/assets/msp-channel-pro-walk-talk-2min.mp4
+          ffprobe -v error -show_entries format=duration,size \
+            -of default=noprint_wrappers=1 \
+            site/msp-pro-channel-2026/assets/msp-channel-pro-walk-talk-2min.mp4
 
       - name: Wire native player and remove internal marketing labels
         run: |
@@ -57,13 +74,13 @@ jobs:
           s = p.read_text(encoding='utf-8')
 
           old_video = '<a class="video-preview" href="https://youtu.be/PHrASbOGVA8" target="_blank" rel="noopener" data-event="video_open_youtube"><img src="/max-justice-nasa-roof.png" alt="Dr. Max Justice — 2-minute Walk & Talk"><div class="play"><span>▶ Play the 2-minute Walk & Talk</span></div></a>'
-          new_video = '<video class="video-player" controls preload="metadata" playsinline poster="/max-justice-nasa-roof.png" data-event="video_native_player"><source src="/msp-pro-channel-2026/assets/msp-channel-pro-walk-talk-2min.mp4" type="video/mp4">Your browser does not support HTML5 video. <a href="https://youtu.be/PHrASbOGVA8" target="_blank" rel="noopener">Watch the video on YouTube.</a></video>'
-          if old_video not in s:
+          new_video = '<video class="video-player" controls preload="metadata" playsinline poster="/max-justice-nasa-roof.png" data-event="video_native_player"><source src="/msp-pro-channel-2026/assets/msp-channel-pro-walk-talk-2min.mp4" type="video/mp4">Your browser does not support HTML5 video.</video>'
+          if old_video not in s and 'msp-channel-pro-walk-talk-2min.mp4' not in s:
               raise SystemExit('Expected video preview block not found')
           s = s.replace(old_video, new_video)
 
           s = s.replace('.video-card p{color:#c8d8ea}', '.video-player{width:100%;aspect-ratio:16/9;border-radius:15px;background:#000;display:block}.video-card p{color:#c8d8ea}')
-          s = s.replace('The video opens directly on YouTube only when you choose to play it. This page does not load an embedded YouTube player or any YouTube cookie domain.', 'The video plays directly from Maximum Justice Cybersecurity using the browser\'s native video player. No YouTube iframe, cookie prompt, or third-party player is loaded. <a href="https://youtu.be/PHrASbOGVA8" style="color:#fff;font-weight:800" target="_blank" rel="noopener">Watch on YouTube instead →</a>')
+          s = s.replace('The video opens directly on YouTube only when you choose to play it. This page does not load an embedded YouTube player or any YouTube cookie domain.', 'The video plays directly from Maximum Justice Cybersecurity using the browser\'s native video player. No YouTube iframe, cookie prompt, or third-party player is loaded.')
 
           s = s.replace('<h2>Jab #1 — MSP AI Decision Assurance readiness check</h2>', '<h2>MSP AI Decision Assurance readiness check</h2>')
           s = s.replace('<div class="eyebrow" style="color:#526070">Jab #2</div>', '')
@@ -81,5 +98,5 @@ jobs:
             echo 'Video asset and landing page already current.'
             exit 0
           fi
-          git commit -m 'Self-host MSP event video and remove internal campaign labels'
+          git commit -m 'Self-host MSP event video from approved source artifact'
           git push origin HEAD:hotfix/self-host-msp-video
