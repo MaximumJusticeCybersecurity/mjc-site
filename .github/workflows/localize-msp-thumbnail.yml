@@ -1,0 +1,49 @@
+name: Localize MSP Thumbnail
+
+on:
+  push:
+    branches:
+      - hotfix/localize-youtube-thumbnail
+    paths:
+      - .github/workflows/localize-msp-thumbnail.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  localize-thumbnail:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: hotfix/localize-youtube-thumbnail
+          fetch-depth: 0
+
+      - name: Fetch YouTube thumbnail and localize page reference
+        run: |
+          set -euo pipefail
+          mkdir -p site/msp-pro-channel-2026/assets
+          curl -fL --retry 3 --retry-delay 2 \
+            'https://i.ytimg.com/vi/PHrASbOGVA8/maxresdefault.jpg' \
+            -o site/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg
+          test -s site/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('site/msp-pro-channel-2026/index.html')
+          s = p.read_text()
+          old = '<img src="https://i.ytimg.com/vi/PHrASbOGVA8/maxresdefault.jpg" onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/PHrASbOGVA8/hqdefault.jpg\'" alt="Dr. Max Justice — 2-minute Walk & Talk">'
+          new = '<img src="/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg" alt="Dr. Max Justice — 2-minute Walk & Talk for MSP leaders">'
+          if old not in s:
+              raise SystemExit('Expected external YouTube thumbnail reference not found')
+          p.write_text(s.replace(old, new))
+          PY
+
+      - name: Commit localized thumbnail
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/msp-pro-channel-2026/index.html site/msp-pro-channel-2026/assets/msp-walk-talk-thumbnail.jpg
+          git commit -m 'Serve MSP Walk & Talk thumbnail locally'
+          git push origin HEAD:hotfix/localize-youtube-thumbnail
