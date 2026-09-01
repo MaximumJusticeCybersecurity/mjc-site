@@ -5,6 +5,7 @@ import { profiles } from '../../site/campaigns/profiles.mjs';
 import {
   normalizeCampaignId,
   allAnswered,
+  sanitizeCampaignState,
   deriveWaterResult,
   deriveCategoryResult,
   deriveEducationResult,
@@ -12,6 +13,23 @@ import {
 } from '../../site/campaigns/campaign-engine.mjs';
 
 const answersFor = (profile, value) => Object.fromEntries(profile.questions.map((q) => [q.id, value]));
+
+function waterAnswersForTotal(total) {
+  const p = profiles.water_v1;
+  const answers = answersFor(p, 'yes');
+  let remaining = total;
+  for (const question of p.questions) {
+    if (remaining >= 2) {
+      answers[question.id] = 'no';
+      remaining -= 2;
+    } else if (remaining === 1) {
+      answers[question.id] = 'partial';
+      remaining -= 1;
+    }
+  }
+  assert.equal(remaining, 0, `unable to construct water total ${total}`);
+  return answers;
+}
 
 test('profiles have the governed question counts', () => {
   assert.equal(profiles.water_v1.questions.length, 10);
@@ -29,6 +47,11 @@ test('campaign IDs are opaque bounded tokens only', () => {
   assert.equal(normalizeCampaignId(''), null);
 });
 
+test('water option weights are exactly YES=0 PARTIAL=1 NO=2', () => {
+  const scoreByValue = Object.fromEntries(profiles.water_v1.options.map((option) => [option.value, option.score]));
+  assert.deepEqual(scoreByValue, { yes: 0, partial: 1, no: 2 });
+});
+
 test('water all-yes result is deterministic and still evidence-qualified', () => {
   const profile = profiles.water_v1;
   const result = deriveWaterResult(profile, answersFor(profile, 'yes'));
@@ -38,22 +61,23 @@ test('water all-yes result is deterministic and still evidence-qualified', () =>
   assert.equal(result.gaps.length, 0);
 });
 
-test('water scoring bands are exact', () => {
+test('water scoring bands pin every governed endpoint', () => {
   const p = profiles.water_v1;
-  let a = answersFor(p, 'yes');
-  a.w6 = 'no'; a.w7 = 'no';
-  assert.equal(deriveWaterResult(p, a).total, 4);
-  assert.equal(deriveWaterResult(p, a).band, 'Material Gaps');
-
-  a = answersFor(p, 'yes');
-  a.w1 = 'no'; a.w2 = 'no'; a.w6 = 'no'; a.w7 = 'no';
-  assert.equal(deriveWaterResult(p, a).total, 8);
-  assert.equal(deriveWaterResult(p, a).band, 'Elevated Operational Risk');
-
-  a = answersFor(p, 'partial');
-  a.w1 = 'no'; a.w2 = 'no'; a.w3 = 'no';
-  assert.equal(deriveWaterResult(p, a).total, 13);
-  assert.equal(deriveWaterResult(p, a).band, 'Immediate Executive Attention');
+  const cases = [
+    [0, 'Demonstrated Readiness'],
+    [3, 'Demonstrated Readiness'],
+    [4, 'Material Gaps'],
+    [7, 'Material Gaps'],
+    [8, 'Elevated Operational Risk'],
+    [12, 'Elevated Operational Risk'],
+    [13, 'Immediate Executive Attention'],
+    [20, 'Immediate Executive Attention']
+  ];
+  for (const [total, band] of cases) {
+    const result = deriveWaterResult(p, waterAnswersForTotal(total));
+    assert.equal(result.total, total, `total ${total}`);
+    assert.equal(result.band, band, `band for total ${total}`);
+  }
 });
 
 test('water critical red-flag escalation is independent of aggregate band', () => {
@@ -80,6 +104,60 @@ test('water value sequence is snapshot then provider worksheet with scorecard su
   assert.match(html, /Owner \| Evidence \| Last Tested \| Gap \| Next Action/);
   assert.match(html, /this page does not claim a snapshot was performed/i);
   assert.doesNotMatch(html, /Re-create the scorecard/i);
+});
+
+test('clean route aliases resolve to the intended built campaign pages', async () => {
+  const routes = [
+    ['dist/water-ready/index.html', 'dist/water-ready.html', /Municipal Water Cyber Assurance Snapshot/],
+    ['dist/health-ready/index.html', 'dist/health-ready.html', /Healthcare/],
+    ['dist/education/ai/trust/index.html', 'dist/education/ai/trust.html', /AI Trust/],
+    ['dist/education/ai/trust/strategy/index.html', 'dist/education/ai/trust/strategy.html', /strategy/i]
+  ];
+  for (const [source, alias, marker] of routes) {
+    const [sourceHtml, aliasHtml] = await Promise.all([readFile(source, 'utf8'), readFile(alias, 'utf8')]);
+    assert.match(sourceHtml, marker, source);
+    assert.equal(aliasHtml, sourceHtml, `${alias} must be byte-identical to ${source}`);
+  }
+});
+
+test('session-state sanitizer rejects cross-sector, unknown answer, forged completion, and malformed state', () => {
+  const water = profiles.water_v1;
+  const validAnswers = answersFor(water, 'yes');
+  const valid = sanitizeCampaignState(water, { sector_profile: water.key, current_stage: 'value_complete', answers: validAnswers });
+  assert.equal(valid.current_stage, 'value_complete');
+  assert.equal(allAnswered(water, valid.answers), true);
+
+  const crossSector = sanitizeCampaignState(water, { sector_profile: profiles.healthcare_v1.key, current_stage: 'hook_eligible', answers: validAnswers });
+  assert.deepEqual(crossSector, { sector_profile: water.key, current_stage: 'landing', answers: {} });
+
+  const tamperedAnswers = { ...validAnswers, w1: 'definitely_yes' };
+  const tampered = sanitizeCampaignState(water, { sector_profile: water.key, current_stage: 'hook_eligible', answers: tamperedAnswers });
+  assert.deepEqual(tampered, { sector_profile: water.key, current_stage: 'landing', answers: {} });
+  assert.equal(allAnswered(water, tamperedAnswers), false);
+
+  const forgedPartial = sanitizeCampaignState(water, { sector_profile: water.key, current_stage: 'hook_eligible', answers: { w1: 'yes' } });
+  assert.equal(forgedPartial.current_stage, 'landing');
+  assert.deepEqual(forgedPartial.answers, { w1: 'yes' });
+
+  assert.deepEqual(sanitizeCampaignState(water, 'not-an-object'), { sector_profile: water.key, current_stage: 'landing', answers: {} });
+  assert.deepEqual(sanitizeCampaignState(water, { sector_profile: water.key, current_stage: {}, answers: [] }), { sector_profile: water.key, current_stage: 'landing', answers: {} });
+});
+
+test('sector profiles use isolated storage identities', () => {
+  const keys = Object.values(profiles).map((profile) => `mjc_campaign_session_v1_${profile.key}`);
+  assert.equal(new Set(keys).size, keys.length);
+});
+
+test('static no-JS water value survives without interactive state', async () => {
+  const html = await readFile('site/water-ready/index.html', 'utf8');
+  const appAt = html.indexOf('id="campaign-app"');
+  const snapshotAt = html.indexOf('Jab #1 · Municipal Water Cyber Assurance Snapshot');
+  const worksheetAt = html.indexOf('Jab #2 · Provider Validation / Executive Evidence Worksheet');
+  const scriptAt = html.indexOf('type="module" src="/campaigns/campaign-shell.js"');
+  assert.ok(snapshotAt >= 0 && snapshotAt < appAt);
+  assert.ok(worksheetAt > snapshotAt && worksheetAt < appAt);
+  assert.match(html, /<noscript>[\s\S]*provider-validation worksheet above[\s\S]*Owner \| Evidence \| Last Tested \| Gap \| Next Action/i);
+  assert.ok(scriptAt > worksheetAt);
 });
 
 test('healthcare categories remain non-certification gap summaries', () => {
@@ -112,10 +190,11 @@ test('hook gate requires value completion or explicit help', () => {
   assert.equal(hookEligible('help_requested'), true);
 });
 
-test('allAnswered fails closed on partial answer state', () => {
+test('allAnswered fails closed on partial or invalid answer state', () => {
   const p = profiles.water_v1;
   assert.equal(allAnswered(p, {}), false);
   assert.equal(allAnswered(p, answersFor(p, 'yes')), true);
+  assert.equal(allAnswered(p, { ...answersFor(p, 'yes'), w1: 'invalid' }), false);
 });
 
 test('public sector pages contain no unrestricted sensitive-data input surface', async () => {
