@@ -1,12 +1,49 @@
 const VALID_CAMPAIGN_ID = /^[A-Za-z0-9_-]{1,32}$/;
+const VALID_STAGES = new Set(['landing', 'value_in_progress', 'value_complete', 'summary_available', 'jab_next_available', 'hook_eligible', 'help_requested']);
 
 export function normalizeCampaignId(value) {
   if (!value || !VALID_CAMPAIGN_ID.test(value)) return null;
   return value;
 }
 
+export function validAnswer(profile, question, value) {
+  return profile.questions.some((item) => item.id === question.id)
+    && profile.options.some((option) => option.value === value);
+}
+
+export function sanitizeCampaignState(profile, candidate) {
+  const empty = { sector_profile: profile.key, current_stage: 'landing', answers: {} };
+  if (!candidate || typeof candidate !== 'object' || Array.isArray(candidate)) return empty;
+  if (candidate.sector_profile !== profile.key) return empty;
+  if (!candidate.answers || typeof candidate.answers !== 'object' || Array.isArray(candidate.answers)) return empty;
+
+  const answers = {};
+  for (const question of profile.questions) {
+    const value = candidate.answers[question.id];
+    if (value === undefined) continue;
+    if (!validAnswer(profile, question, value)) return empty;
+    answers[question.id] = value;
+  }
+
+  const unknownAnswerKeys = Object.keys(candidate.answers).filter(
+    (key) => !profile.questions.some((question) => question.id === key)
+  );
+  if (unknownAnswerKeys.length) return empty;
+
+  const requestedStage = typeof candidate.current_stage === 'string' ? candidate.current_stage : 'landing';
+  const current_stage = VALID_STAGES.has(requestedStage) ? requestedStage : 'landing';
+  if (hookEligible(current_stage) && !allAnswered(profile, answers) && current_stage !== 'help_requested') {
+    return { ...empty, answers };
+  }
+  return { sector_profile: profile.key, current_stage, answers };
+}
+
 export function allAnswered(profile, answers) {
-  return profile.questions.every((question) => Object.prototype.hasOwnProperty.call(answers, question.id));
+  if (!answers || typeof answers !== 'object' || Array.isArray(answers)) return false;
+  return profile.questions.every((question) => {
+    if (!Object.prototype.hasOwnProperty.call(answers, question.id)) return false;
+    return validAnswer(profile, question, answers[question.id]);
+  });
 }
 
 export function deriveWaterResult(profile, answers) {
