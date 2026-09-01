@@ -1,5 +1,5 @@
 import { getProfile } from './profiles.mjs';
-import { normalizeCampaignId, allAnswered, deriveResult, hookEligible } from './campaign-engine.mjs';
+import { normalizeCampaignId, allAnswered, deriveResult, hookEligible, sanitizeCampaignState } from './campaign-engine.mjs';
 
 const profileKey = document.body.dataset.profile;
 const profile = getProfile(profileKey);
@@ -25,10 +25,9 @@ const event = (name, extra = {}) => {
 const safeReadState = () => {
   try {
     const parsed = JSON.parse(sessionStorage.getItem(storageKey) || '{}');
-    if (parsed.sector_profile !== profile.key) return { sector_profile: profile.key, current_stage: 'landing', answers: {} };
-    return { sector_profile: profile.key, current_stage: parsed.current_stage || 'landing', answers: parsed.answers || {} };
+    return sanitizeCampaignState(profile, parsed);
   } catch {
-    return { sector_profile: profile.key, current_stage: 'landing', answers: {} };
+    return sanitizeCampaignState(profile, null);
   }
 };
 
