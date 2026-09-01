@@ -13,7 +13,7 @@ The model must be operational, evidence-based, simple enough for MSP field use, 
 
 ## Required implementation
 
-### MSP-011 — Security Maturity Model
+### MSP-016 — Security Maturity Model
 
 The MSP field kit shall include:
 
