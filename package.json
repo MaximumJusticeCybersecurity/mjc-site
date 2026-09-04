@@ -1,6 +1,6 @@
 {
   "name": "mjc-website-vercel-ready",
-  "version": "12.5.0",
+  "version": "12.6.0",
   "private": true,
   "description": "Maximum Justice Cybersecurity website package prepared for Vercel deployment from GitHub.",
   "scripts": {
@@ -9,8 +9,9 @@
     "test:email-gate": "node --test tests/local-digital-brain-email-gate.test.cjs && node --test tests/local-digital-brain-build.test.mjs",
     "evidence:email-gate": "node tests/local-digital-brain-evidence.mjs",
     "check:email-gate": "npm run build && npm run test:email-gate && npm run evidence:email-gate",
+    "test:campaign": "node --test docs/campaigns/campaign-shell.test.mjs",
     "test:security-posture": "node --test tests/site-security-posture.test.mjs",
-    "check:security-posture": "npm run build && npm run test:security-posture",
+    "check:security-posture": "npm run build && npm run test:security-posture && npm run test:campaign",
     "test:msp-kit": "node --test tests/msp-field-kit.test.mjs",
     "check:msp-kit": "npm run build && npm run test:msp-kit && npm run test:security-posture"
   },
