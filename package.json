@@ -11,7 +11,9 @@
     "check:email-gate": "npm run build && npm run test:email-gate && npm run evidence:email-gate",
     "test:campaign": "node --test docs/campaigns/campaign-shell.test.mjs",
     "test:security-posture": "node --test tests/site-security-posture.test.mjs",
-    "check:security-posture": "npm run build && npm run test:security-posture && npm run test:campaign"
+    "check:security-posture": "npm run build && npm run test:security-posture && npm run test:campaign",
+    "test:msp-kit": "node --test tests/msp-field-kit.test.mjs",
+    "check:msp-kit": "npm run build && npm run test:msp-kit && npm run test:security-posture"
   },
   "engines": {
     "node": ">=18"

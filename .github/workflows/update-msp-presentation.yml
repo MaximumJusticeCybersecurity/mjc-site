@@ -1,0 +1,58 @@
+name: Update MSP Pro Channel Presentation
+
+on:
+  push:
+    branches:
+      - hotfix/msp-walk-talk-thumbnail
+    paths:
+      - .github/workflows/update-msp-presentation.yml
+
+permissions:
+  contents: write
+
+jobs:
+  update-page:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: hotfix/msp-walk-talk-thumbnail
+          fetch-depth: 0
+
+      - name: Generate self-contained QR and update landing page
+        run: |
+          python -m pip install qrcode
+          python - <<'PY'
+          from pathlib import Path
+          import qrcode
+          import qrcode.image.svg
+
+          page_url = 'https://app.maximumjusticecybersecurity.com/msp-pro-channel-2026/?utm_source=onscreen_qr&utm_medium=offline&utm_campaign=msp-pro-channel-2026'
+          qr_path = Path('site/msp-pro-channel-2026/assets/msp-pro-channel-2026-qr.svg')
+          qr_path.parent.mkdir(parents=True, exist_ok=True)
+          img = qrcode.make(page_url, image_factory=qrcode.image.svg.SvgPathImage, error_correction=qrcode.constants.ERROR_CORRECT_Q)
+          with qr_path.open('wb') as f:
+              img.save(f)
+
+          p = Path('site/msp-pro-channel-2026/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          s = s.replace('.subcta{font-size:.9rem;color:#c6d6e8}', '.hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:14px}.hero-actions .cta{margin-top:0}.hero-qr{display:block;width:104px;height:104px;background:#fff;border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.22)}.hero-qr img{width:100%;height:100%;display:block}.subcta{font-size:.9rem;color:#c6d6e8}')
+          s = s.replace('<a class="cta" href="#scorecard" data-event="hero_cta">Get the free starter kit</a><p class="subcta">No sales gate. Get value first. Decide later whether a deeper review is useful.</p>', '<div class="hero-actions"><a class="cta" href="#scorecard" data-event="hero_cta">Get the free starter kit</a><a class="hero-qr" href="https://app.maximumjusticecybersecurity.com/msp-pro-channel-2026/?utm_source=onscreen_qr&amp;utm_medium=offline&amp;utm_campaign=msp-pro-channel-2026" data-event="hero_qr" aria-label="Open MSP Pro Channel 2026 landing page"><img src="/msp-pro-channel-2026/assets/msp-pro-channel-2026-qr.svg" alt="QR code for this MSP Pro Channel 2026 page"></a></div><p class="subcta">No sales gate. Get value first. Decide later whether a deeper review is useful.</p>')
+          s = s.replace('<img src="/max-justice-nasa-roof.png" alt="Dr. Max Justice — 2-minute Walk & Talk">', '<img src="https://i.ytimg.com/vi/PHrASbOGVA8/maxresdefault.jpg" onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/PHrASbOGVA8/hqdefault.jpg\'" alt="Dr. Max Justice — 2-minute Walk & Talk">')
+          s = s.replace('<h2>Jab #1 — MSP AI Decision Assurance readiness check</h2>', '<h2>MSP AI Decision Assurance readiness check</h2>')
+          s = s.replace('<div class="eyebrow" style="color:#526070">Jab #2</div>', '')
+          s = s.replace('<div class="eyebrow" style="color:#526070">Proof before pitch</div>', '')
+          s = s.replace('<div class="eyebrow">The hook — after the value</div>', '')
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit presentation updates
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add site/msp-pro-channel-2026/index.html site/msp-pro-channel-2026/assets/msp-pro-channel-2026-qr.svg
+          git commit -m 'Improve MSP landing thumbnail, QR, and public copy'
+          git push origin HEAD:hotfix/msp-walk-talk-thumbnail
