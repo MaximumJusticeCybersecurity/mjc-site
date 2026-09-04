@@ -8,6 +8,14 @@ Demonstrate how one ThinkEzIT capability set becomes two materially different ma
 2. Jab 2 — personalized observation + one deeper operational insight
 3. Hook — low-risk conversation / existing ThinkEzIT 30-day trial where appropriate
 
+## Campaign attribution
+Use stable campaign identities and prospect-specific `utm_content` values so traffic can be reconciled without collecting assessment answers or sensitive prospect data.
+
+- Legal Jab 1: `utm_source=outreach&utm_medium=email&utm_campaign=thinkezit_legal_jab1&utm_content=[prospect_slug]`
+- Healthcare Jab 1: `utm_source=outreach&utm_medium=email&utm_campaign=thinkezit_healthcare_jab1&utm_content=[prospect_slug]`
+- Jab 2 / Hook touches should preserve the same vertical campaign family and use a stage-specific campaign value only when the downstream analytics implementation can reconcile it deterministically.
+- Do not transmit readiness-check answers through URL parameters or analytics events.
+
 ## Target radius
 Approximately 90 road/market miles from Chambersburg, PA. Prioritize Chambersburg, Hagerstown, Carlisle, Gettysburg, Frederick, Harrisburg-area edge, Waynesboro/Greencastle, Martinsburg and adjacent reachable markets before expanding.
 
@@ -47,9 +55,18 @@ Track prospect, segment, score, owner, Jab 1 date, Jab 2 date, Hook date, opens/
 - Human/conversational, not cinematic
 - ~2 minutes
 
+## Media provenance gate
+A landing page must not reference a video or local brand asset unless that exact file exists on the candidate and its provenance is approved. Missing media fails closed to a text-first page rather than a broken player, generated substitute, or guessed asset path.
+
+The prior legal page reference to `/media/thinkezit/Walk_Talk_Canonical_Reusable_Source_2026-08-25.mp4` had no corresponding file on this candidate and is therefore removed until an approved source is materialized.
+
 ## Status
-Legal Jab 1 page: built
+Legal Jab 1 page: built; broken/unproven local video reference removed pending approved media materialization
 Healthcare Jab 1 page: built
+Campaign/UTM attribution: explicitly bound for Jab 1
 Campaign methodology: documented
 Video narration: specified separately
-Video render: use an existing approved Walk & Talk source from Project/Library when retrievable; otherwise request source only after all non-video work is complete.
+Video render: pending approved Walk & Talk source materialization and provenance; do not invent a substitute asset
+Approved local ThinkEzIT logo/media provenance: still required before final release if local asset packaging is required
+Analytics/lead-routing implementation: still pending bounded decision and verification
+Production QR package: not ready until canonical production routes and final media/CTA state are verified
