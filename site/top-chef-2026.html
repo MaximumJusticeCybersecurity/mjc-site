@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Vote for your favorite chef in the 2026 Setas Mushrooms Top Chef Competition.">
+  <title>Vote for Your Top Chef | 2026 Setas Mushrooms Top Chef Competition</title>
+  <link rel="stylesheet" href="/top-chef-2026.css?v=1.0.0">
+</head>
+<body>
+  <main class="page-shell">
+    <header class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Setas Mushrooms presents</p>
+      <h1 id="page-title">Vote for Your Top Chef</h1>
+      <p class="year">2026 Top Chef Competition</p>
+      <p class="intro">Four gourmet chefs. One crowd favorite. Taste the creations, then cast your vote for the chef who deserves the 2026 People’s Choice title.</p>
+    </header>
+
+    <section class="ballot" aria-labelledby="ballot-title">
+      <div class="section-heading">
+        <h2 id="ballot-title">Choose one chef</h2>
+        <p>One vote per device. Voting closes when event organizers end the competition.</p>
+      </div>
+
+      <form id="top-chef-ballot" novalidate>
+        <div id="chef-grid" class="chef-grid" role="radiogroup" aria-labelledby="ballot-title"></div>
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <button id="vote-button" class="vote-button" type="submit" disabled>Cast My Vote</button>
+        <p id="vote-status" class="vote-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <footer class="footer">
+      <p>2026 Setas Mushrooms Top Chef Competition</p>
+      <p class="fine-print">Votes are collected for event judging purposes. Automated or duplicate voting may be rejected.</p>
+    </footer>
+  </main>
+  <script src="/top-chef-2026.js?v=1.0.0" defer></script>
+</body>
+</html>
