@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Vote for Top Chef | Setas Mushrooms Grand Feast 2026</title>
+  <meta name="description" content="Rate all four chefs in the 2026 Setas Mushrooms Grand Feast Top Chef Cook-Off. Live aggregate results are shown throughout the competition.">
+  <style>
+    :root{--ink:#142218;--muted:#607064;--cream:#fbf8ef;--card:#fff;--green:#1f6a3c;--green2:#124b2a;--gold:#d59a2f;--line:#d9dfd6;--danger:#9b2c2c;--shadow:0 12px 35px rgba(20,34,24,.10)}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at top,#eef5e9 0,#fbf8ef 44%,#f6f2e8 100%);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+    a{color:inherit}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}.hero{padding:38px 0 22px;text-align:center}.kicker{font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:var(--green);font-size:.78rem}.hero h1{font-size:clamp(2rem,6vw,4rem);line-height:1.02;margin:.35rem 0 .65rem}.hero p{max-width:750px;margin:0 auto;color:var(--muted);font-size:1.05rem}.status{margin:22px auto 0;max-width:760px;border:1px solid var(--line);background:rgba(255,255,255,.88);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow)}.status strong{display:block;font-size:1.08rem}.status small{display:block;color:var(--muted);margin-top:4px}.status.open{border-color:#88b796}.status.closed{border-color:#d6b0a8}.meter{height:8px;border-radius:100px;background:#e5eae3;overflow:hidden;margin-top:10px}.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .35s ease}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:25px 0}.chef{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:var(--shadow)}.chef h2{margin:0 0 5px;font-size:1.55rem}.dish{color:var(--muted);min-height:48px}.stars{display:flex;gap:7px;margin-top:16px;flex-wrap:wrap}.stars input{position:absolute;opacity:0;pointer-events:none}.stars label{cursor:pointer;border:1px solid #d5d9d2;border-radius:12px;padding:9px 11px;background:#fff;font-weight:800;min-width:48px;text-align:center}.stars input:checked+label{background:#fff4ce;border-color:var(--gold);box-shadow:0 0 0 2px rgba(213,154,47,.15)}.stars label:hover{border-color:var(--gold)}
+    .form-card,.results-card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow);margin:22px 0}.form-card h2,.results-card h2{margin:0 0 4px}.sub{margin:0 0 18px;color:var(--muted)}.fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field label{display:block;font-weight:800;margin-bottom:6px}.field input{width:100%;border:1px solid #cbd4ca;border-radius:12px;padding:13px 14px;font:inherit;background:#fff}.field input:focus{outline:3px solid rgba(31,106,60,.15);border-color:var(--green)}.privacy{font-size:.9rem;color:var(--muted);margin:14px 0}.privacy strong{color:var(--ink)}button{appearance:none;border:0;border-radius:14px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;font-weight:900;padding:14px 20px;font-size:1rem;cursor:pointer;min-width:190px}button:disabled{opacity:.42;cursor:not-allowed}.message{margin:14px 0 0;font-weight:750}.message.error{color:var(--danger)}.honeypot{position:absolute;left:-9999px}
+    .results{display:grid;gap:13px;margin-top:17px}.result-row{display:grid;grid-template-columns:minmax(160px,1fr) minmax(180px,2fr) auto;align-items:center;gap:14px}.bar{height:14px;background:#e8ece6;border-radius:99px;overflow:hidden}.bar span{height:100%;display:block;width:0;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .4s ease}.numbers{text-align:right;min-width:110px}.numbers strong{display:block}.numbers small{color:var(--muted)}.leader{color:var(--green);font-weight:900}.qrbox{display:flex;align-items:center;gap:18px;border-top:1px solid var(--line);margin-top:22px;padding-top:20px}.qrbox img{width:116px;height:116px;background:#fff;border:8px solid #fff}.fine{color:var(--muted);font-size:.84rem;margin:20px 0 34px;text-align:center}
+    @media(max-width:760px){.grid,.fields{grid-template-columns:1fr}.result-row{grid-template-columns:1fr auto}.result-row .bar{grid-column:1/-1}.dish{min-height:0}.qrbox{align-items:flex-start}.hero{padding-top:26px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="kicker">Setas Mushrooms · Grand Feast 2026</div>
+      <h1>Vote for Your Top Chef</h1>
+      <p>Taste all four dishes, then rate every chef from 1 to 5 stars. One completed ballot per attendee. The chef with the highest cumulative star total wins.</p>
+      <div id="contestStatus" class="status" aria-live="polite"><strong>Checking voting status…</strong><small>Voting runs from 5:05 PM to 6:55 PM Eastern, or until 1,000 ballots are received.</small><div class="meter"><span id="ballotMeter"></span></div></div>
+    </section>
+
+    <form id="voteForm" class="form-card" novalidate>
+      <h2>Your ballot</h2>
+      <p class="sub">Rate all four chefs. Every rating is required before your ballot can be submitted.</p>
+      <div class="fields">
+        <div class="field"><label for="name">Name</label><input id="name" name="name" autocomplete="name" maxlength="100" required></div>
+        <div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required></div>
+      </div>
+      <div class="honeypot" aria-hidden="true"><label>Website<input id="website" tabindex="-1" autocomplete="off"></label></div>
+
+      <div class="grid">
+        <section class="chef"><h2>Chef Marlon</h2><div class="dish">Oyster Tempura and Rice</div><div class="stars" data-chef="marlon" aria-label="Rate Chef Marlon">
+          <input id="marlon1" name="marlon" type="radio" value="1"><label for="marlon1">1 ★</label><input id="marlon2" name="marlon" type="radio" value="2"><label for="marlon2">2 ★</label><input id="marlon3" name="marlon" type="radio" value="3"><label for="marlon3">3 ★</label><input id="marlon4" name="marlon" type="radio" value="4"><label for="marlon4">4 ★</label><input id="marlon5" name="marlon" type="radio" value="5"><label for="marlon5">5 ★</label>
+        </div></section>
+        <section class="chef"><h2>Chef Kei</h2><div class="dish">Pulled Mushrooms, Fries, and Mushroom Deviled Eggs</div><div class="stars" data-chef="kei" aria-label="Rate Chef Kei">
+          <input id="kei1" name="kei" type="radio" value="1"><label for="kei1">1 ★</label><input id="kei2" name="kei" type="radio" value="2"><label for="kei2">2 ★</label><input id="kei3" name="kei" type="radio" value="3"><label for="kei3">3 ★</label><input id="kei4" name="kei" type="radio" value="4"><label for="kei4">4 ★</label><input id="kei5" name="kei" type="radio" value="5"><label for="kei5">5 ★</label>
+        </div></section>
+        <section class="chef"><h2>Chef Austin</h2><div class="dish">Hunan-Style Fried Lion's Mane and Shiitake Skewers over Shiitake Fried Rice</div><div class="stars" data-chef="austin" aria-label="Rate Chef Austin">
+          <input id="austin1" name="austin" type="radio" value="1"><label for="austin1">1 ★</label><input id="austin2" name="austin" type="radio" value="2"><label for="austin2">2 ★</label><input id="austin3" name="austin" type="radio" value="3"><label for="austin3">3 ★</label><input id="austin4" name="austin" type="radio" value="4"><label for="austin4">4 ★</label><input id="austin5" name="austin" type="radio" value="5"><label for="austin5">5 ★</label>
+        </div></section>
+        <section class="chef"><h2>Chef Cameron</h2><div class="dish">Lion's Mane Katsu with Miso Honey, Sweet Corn, and Sesame Scallion Rice</div><div class="stars" data-chef="cameron" aria-label="Rate Chef Cameron">
+          <input id="cameron1" name="cameron" type="radio" value="1"><label for="cameron1">1 ★</label><input id="cameron2" name="cameron" type="radio" value="2"><label for="cameron2">2 ★</label><input id="cameron3" name="cameron" type="radio" value="3"><label for="cameron3">3 ★</label><input id="cameron4" name="cameron" type="radio" value="4"><label for="cameron4">4 ★</label><input id="cameron5" name="cameron" type="radio" value="5"><label for="cameron5">5 ★</label>
+        </div></section>
+      </div>
+
+      <p class="privacy"><strong>Privacy:</strong> Your name and email are collected only to protect the integrity of this competition and prevent duplicate voting. They are never shown publicly. Access is restricted to Max and Kat at Setas Mushrooms. Public results contain aggregate chef scores only.</p>
+      <button id="submitBtn" type="submit" disabled>Submit my ballot</button>
+      <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+    </form>
+
+    <section class="results-card">
+      <h2>Live standings</h2><p class="sub"><span id="ballotCount">0</span> of 1,000 ballots submitted. Results refresh automatically.</p>
+      <div id="results" class="results"></div>
+      <div class="qrbox"><img src="/top-chef-2026-qr.svg" alt="QR code for this Top Chef voting page"><div><strong>Share the voting page</strong><div class="sub" style="margin:.3rem 0 0">Scan this code to return to the ballot and live standings.</div></div></div>
+    </section>
+    <p class="fine">Voting opens September 12, 2026 at 5:05 PM ET and closes at 6:55 PM ET or upon receipt of the 1,000th completed ballot, whichever happens first.</p>
+  </main>
+<script>
+(() => {
+  const chefs = ['marlon','kei','austin','cameron'];
+  const statusEl = document.getElementById('contestStatus');
+  const meter = document.getElementById('ballotMeter');
+  const countEl = document.getElementById('ballotCount');
+  const resultsEl = document.getElementById('results');
+  const form = document.getElementById('voteForm');
+  const button = document.getElementById('submitBtn');
+  const message = document.getElementById('formMessage');
+  let contestOpen = false;
+
+  function deviceId() {
+    let id = localStorage.getItem('setas_topchef_2026_device');
+    if (!id) { id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random(); localStorage.setItem('setas_topchef_2026_device', id); }
+    return id;
+  }
+  function setStatus(state, ballots) {
+    contestOpen = state === 'open';
+    const voted = localStorage.getItem('setas_topchef_2026_voted') === 'yes';
+    statusEl.className = 'status ' + (contestOpen ? 'open' : 'closed');
+    const map = {
+      'not-open':['Voting opens at 5:05 PM','Enjoy the dishes first. The ballot will unlock automatically at 5:05 PM Eastern.'],
+      'open':['Voting is open','Rate all four chefs and submit one ballot before 6:55 PM.'],
+      'closed-time':['Voting is closed','Voting ended at 6:55 PM. The final standings are shown below.'],
+      'closed-full':['Voting is closed','The competition reached the 1,000-ballot maximum. Final standings are shown below.']
+    };
+    const copy = map[state] || ['Voting status unavailable','Please refresh this page.'];
+    statusEl.querySelector('strong').textContent = copy[0]; statusEl.querySelector('small').textContent = copy[1];
+    button.disabled = !contestOpen || voted;
+    if (voted) { button.textContent = 'Ballot submitted'; message.textContent = 'Your vote has been recorded. Thank you.'; }
+    meter.style.width = Math.min(100, ballots / 10) + '%';
+  }
+  function render(data) {
+    const maxStars = Math.max(1, ...data.chefs.map(c => c.stars));
+    const high = Math.max(...data.chefs.map(c => c.stars));
+    countEl.textContent = data.ballots.toLocaleString();
+    resultsEl.innerHTML = data.chefs.map(c => `<div class="result-row"><div><strong class="${c.stars===high&&high>0?'leader':''}">${c.name}${c.stars===high&&high>0?' · Leader':''}</strong><small>${c.dish}</small></div><div class="bar"><span style="width:${Math.round((c.stars/maxStars)*100)}%"></span></div><div class="numbers"><strong>${c.stars.toLocaleString()} ★</strong><small>${c.average.toFixed(2)} avg</small></div></div>`).join('');
+    setStatus(data.state, data.ballots);
+  }
+  async function refresh() {
+    try { const r = await fetch('/api/top-chef-results', {cache:'no-store'}); const data = await r.json(); if (r.ok && data.ok) render(data); else throw new Error(); }
+    catch { statusEl.querySelector('strong').textContent='Live results temporarily unavailable'; statusEl.querySelector('small').textContent='The ballot is unavailable until the secure vote service responds.'; contestOpen=false; button.disabled=true; }
+  }
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault(); if (!contestOpen || button.disabled) return;
+    const ratings = {}; for (const chef of chefs) { const selected = form.querySelector(`input[name="${chef}"]:checked`); if (!selected) { message.className='message error'; message.textContent='Please rate all four chefs before submitting.'; return; } ratings[chef]=Number(selected.value); }
+    const name=document.getElementById('name').value.trim(), email=document.getElementById('email').value.trim();
+    if (name.length<2 || !email) { message.className='message error'; message.textContent='Please enter your name and a valid email address.'; return; }
+    button.disabled=true; button.textContent='Recording…'; message.className='message'; message.textContent='';
+    try {
+      const r=await fetch('/api/top-chef-vote',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,website:document.getElementById('website').value,deviceId:deviceId(),ratings})});
+      const data=await r.json();
+      if (r.ok && data.ok) { localStorage.setItem('setas_topchef_2026_voted','yes'); button.textContent='Ballot submitted'; message.textContent='Your vote has been recorded. Thank you.'; await refresh(); return; }
+      if (data.code==='ALREADY_VOTED') { localStorage.setItem('setas_topchef_2026_voted','yes'); button.textContent='Already voted'; message.textContent='A ballot has already been recorded for this attendee or device.'; return; }
+      if (data.code==='NOT_OPEN') throw new Error('Voting has not opened yet.');
+      if (data.code==='CLOSED_TIME'||data.code==='CLOSED_FULL') throw new Error('Voting is closed.');
+      if (data.code==='ALL_RATINGS_REQUIRED') throw new Error('Please rate all four chefs.');
+      if (data.code==='INVALID_EMAIL') throw new Error('Please enter a valid email address.');
+      throw new Error('Your ballot was not recorded. Please try again.');
+    } catch (err) { message.className='message error'; message.textContent=err.message || 'Your ballot was not recorded.'; button.textContent='Submit my ballot'; button.disabled=!contestOpen; }
+  });
+  refresh(); setInterval(refresh,5000);
+})();
+</script>
+</body>
+</html>
