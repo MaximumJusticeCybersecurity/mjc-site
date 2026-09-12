@@ -51,6 +51,15 @@
       ]
     },
     {
+      "source": "/top-chef-2026",
+      "headers": [
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
+      ]
+    },
+    {
       "source": "/(.*)",
       "headers": [
         {
@@ -97,6 +106,7 @@
     { "source": "/local-digital-brain-lead", "destination": "/api/local-digital-brain-access" },
     { "source": "/local-digital-brain-guide", "destination": "/local-digital-brain-guide.html" },
     { "source": "/msp", "destination": "/msp.html" },
+    { "source": "/top-chef-2026", "destination": "/top-chef-2026.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
