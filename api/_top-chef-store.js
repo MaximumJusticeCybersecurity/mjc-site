@@ -11,9 +11,9 @@ const CHEFS = [
 ];
 
 function configuration(env = process.env) {
-  const url = String(env.TOP_CHEF_REDIS_REST_URL || env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
-  const token = String(env.TOP_CHEF_REDIS_REST_TOKEN || env.UPSTASH_REDIS_REST_TOKEN || '');
-  const secret = String(env.TOP_CHEF_PII_SECRET || '');
+  const url = String(env.TOP_CHEF_REDIS_REST_URL || env.KV_REST_API_URL || env.UPSTASH_REDIS_REST_URL || '').replace(/\/$/, '');
+  const token = String(env.TOP_CHEF_REDIS_REST_TOKEN || env.KV_REST_API_TOKEN || env.UPSTASH_REDIS_REST_TOKEN || '');
+  const secret = String(env.TOP_CHEF_PII_SECRET || env.TOP_CHEF_VOTE_SALT || '');
   return { url, token, secret, ready: Boolean(url && token && secret) };
 }
 
