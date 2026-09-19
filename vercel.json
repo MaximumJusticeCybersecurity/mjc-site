@@ -8,38 +8,68 @@
     {
       "source": "/",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/local-digital-brain",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/local-digital-brain-guide",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/ai-security-ciso-profile",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/msp",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
+      ]
+    },
+    {
+      "source": "/ai-control-intelligence",
+      "headers": [
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        }
       ]
     },
     {
       "source": "/top-chef-2026",
       "headers": [
-        { "key": "Cross-Origin-Resource-Policy", "value": "same-origin" },
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
       ]
     },
     {
@@ -49,26 +79,66 @@
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://raw.githubusercontent.com; font-src 'self' data:; connect-src 'self' https://voice.maximumjusticecybersecurity.com; media-src 'self' blob: https://voice.maximumjusticecybersecurity.com; form-action 'self' mailto:; manifest-src 'self'; upgrade-insecure-requests"
         },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" }
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        }
       ]
     },
     {
       "source": "/.well-known/security.txt",
       "headers": [
-        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
-        { "key": "Cache-Control", "value": "public, max-age=3600, must-revalidate" }
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, must-revalidate"
+        }
       ]
     }
   ],
   "rewrites": [
-    { "source": "/local-digital-brain-lead", "destination": "/api/local-digital-brain-access" },
-    { "source": "/local-digital-brain-guide", "destination": "/local-digital-brain-guide.html" },
-    { "source": "/msp", "destination": "/msp.html" },
-    { "source": "/top-chef-2026", "destination": "/top-chef-2026.html" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/local-digital-brain-lead",
+      "destination": "/api/local-digital-brain-access"
+    },
+    {
+      "source": "/local-digital-brain-guide",
+      "destination": "/local-digital-brain-guide.html"
+    },
+    {
+      "source": "/msp",
+      "destination": "/msp.html"
+    },
+    {
+      "source": "/top-chef-2026",
+      "destination": "/top-chef-2026.html"
+    },
+    {
+      "source": "/ai-control-intelligence",
+      "destination": "/ai-control-intelligence.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
