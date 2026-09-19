@@ -12,8 +12,11 @@ const prohibited=[
   'CS-CTRL-',
   'tools/control_registry_validate',
   'Aegis accepted artifact-integrity',
-  'checkout.stripe',
-  'Buy now'
+  'checkout',
+  'payment',
+  'Buy now',
+  'purchase now',
+  'subscribe now'
 ];
 
 function walk(dir){
@@ -41,10 +44,10 @@ test('landing page preserves locked public product truth',()=>{
   ]) assert.ok(source.includes(phrase),`Missing required public message: ${phrase}`);
 });
 
-test('CTA is non-transactional while pricing and checkout remain owner-gated',()=>{
+test('CTA is non-transactional and contains no commerce mechanism markers',()=>{
   assert.ok(source.includes('Discuss early access'));
-  assert.ok(source.includes('not an active checkout or payment flow'));
-  assert.ok(!/\$\s*\d|buy now|checkout|payment processor/i.test(source.replace('not an active checkout or payment flow','')));
+  assert.ok(source.includes('does not create a purchase, subscription, or binding commercial commitment'));
+  assert.ok(!/\$\s*\d|buy now|checkout|payment|payment processor|subscribe now/i.test(source));
 });
 
 test('private registry content is absent from source and exact built page',()=>{
