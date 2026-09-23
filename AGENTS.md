@@ -4,6 +4,23 @@ Version timestamp: 2026062312
 Owner and final human authority: Dr. Max Justice  
 Applies to: website builders, content agents, funnel builders, reviewers, analytics agents, and deployment operators
 
+## Mandatory pre-response reconciliation audit
+
+Owner directive effective 2026-09-23: before the next substantive completion response, every agent, builder, site engineer, subagent, automation, or project actor working in this repository must perform a catch-up reconciliation audit of prior commitments, owner directives, lessons learned, issues/PRs, requirements, assignments, shipped-change claims, implementation claims, and verification claims.
+
+Use the canonical audit protocol and central completion register proposed in MaximumJusticeCybersecurity/Aegis PR #608.  At minimum:
+
+1. Review current governing instructions and applicable security/governance requirements.
+2. Review relevant project/owner directives, issues/PRs, lessons learned, and requirements.
+3. Find prior statements such as updated, captured, learned, made standard, implemented, fixed, verified, deployed, assigned, reassigned, closed, resolved, or operational.
+4. Classify actual state as CHAT_ONLY, DURABLE_OPEN_REVIEW, MERGED_CANONICAL, IMPLEMENTED_NOT_VERIFIED, VERIFIED, OPERATIONAL, SUPERSEDED, or NO_LONGER_REQUIRED.
+5. Flag unsupported claims, missing durable rules, stale/duplicate/contradictory requirements, unattended assignments, and unverified implementation.
+6. Correct safe documentation/requirements gaps on a review branch or open tracked work.
+7. Update the Aegis central reconciliation register; if missing, self-register.
+8. The next substantive owner-facing completion response must report scope reviewed, material misses, corrections, residual gaps, exact evidence references, and COMPLETE/BLOCKED status.
+
+A chat acknowledgement is not a durable update.  An open PR is not merged canonical policy.  Documentation is not implementation.  Implementation is not verification.  Verification is not deployment.  Deployment is not proof of operational effectiveness.
+
 ## Required startup
 
 Before material content or site work:
