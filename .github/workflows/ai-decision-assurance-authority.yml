@@ -1,0 +1,33 @@
+name: AI Decision Assurance Authority Page
+
+on:
+  pull_request:
+    paths:
+      - 'site/ai-decision-assurance.html'
+      - 'site/assets/decision-assurance/**'
+      - 'site/index.html'
+      - 'site/llms.txt'
+      - 'site/sitemap.xml'
+      - 'content-governance.json'
+      - 'vercel.json'
+      - 'tests/ai-decision-assurance-authority.test.mjs'
+      - '.github/workflows/ai-decision-assurance-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: '22'
+      - name: Run authority-page regression tests
+        run: node --test tests/ai-decision-assurance-authority.test.mjs
+      - name: Build site
+        run: npm run build
