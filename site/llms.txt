@@ -47,6 +47,11 @@ Current bounded capabilities include:
 
 CyberShield does not autonomously approve vendors, accept organizational risk, certify compliance, or replace accountable human authority.
 
+Primary AI Decision Assurance authority page:
+https://app.maximumjusticecybersecurity.com/ai-decision-assurance
+
+This executive authority page defines AI Decision Assurance, explains the Claims -> Evidence -> Consequences / Risk If Wrong -> Decision -> Record method, provides five pre-action tests, ten CEO/board questions, and a directly printable board handout.
+
 Primary CyberShield public pathways:
 - Challenge One AI Recommendation: https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html
 - CyberShield example: https://maximumjusticecybersecurity.github.io/CyberShield/
@@ -156,6 +161,8 @@ Bring one AI-assisted decision where being wrong actually matters and evaluate w
 
 ## Public calls to action
 
+- AI Decision Assurance executive authority guide: https://app.maximumjusticecybersecurity.com/ai-decision-assurance
+- CEO's 10 Questions Before Acting on an AI Recommendation: https://app.maximumjusticecybersecurity.com/assets/decision-assurance/ceo-10-questions.html
 - Challenge One AI Recommendation: https://maximumjusticecybersecurity.github.io/CyberShield/vendor-risk-next.html
 - MSP AI Decision Assurance Field Kit: https://app.maximumjusticecybersecurity.com/msp
 - See CyberShield: https://maximumjusticecybersecurity.github.io/CyberShield/
