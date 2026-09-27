@@ -1,0 +1,43 @@
+{
+  "manifest_version": "bootstrap-reference-1.0",
+  "version_timestamp": "20260927",
+  "status": "repository-local-bootstrap-reference",
+  "repository": "MaximumJusticeCybersecurity/mjc-site",
+  "local_security_file": "SECURITY.md",
+  "local_security_file_note": "Repository-specific security/disclosure policy remains authoritative for its local scope; agent governance is additionally bound to canonical Aegis controls by reference.",
+  "canonical_repository": "MaximumJusticeCybersecurity/Aegis",
+  "canonical_branch": "main",
+  "canonical_security_file": "SECURITY.md",
+  "canonical_manifest_path": "security-policy-manifest.json",
+  "canonical_policy_path": "15_security/2026061909-agentic-security-identity-and-protection-standard.md",
+  "canonical_policy_version": "2026061909",
+  "canonical_policy_integrity": {
+    "algorithm": "git-blob-sha",
+    "value": "9936634b8187f78e38b03f3bbe1c670fdeda1884"
+  },
+  "canonical_verifier_roles_path": "VERIFIER_ROLES.md",
+  "canonical_work_navigation_path": "19_agentic-operations/work-navigation/OPERATIONAL-POLICY.md",
+  "canonical_no_orphan_sop_path": "19_agentic-operations/2026072215-no-orphan-requirements-and-implementation-coverage-sop.md",
+  "governing_issues": {
+    "serialized_mutation_and_assignment_lock": 545,
+    "fail_closed_bootstrap_recovery": 649
+  },
+  "local_required_documents": [
+    "AGENTS.md",
+    "START-HERE.md",
+    "SECURITY.md",
+    "security-policy-manifest.json",
+    "VERIFIER_ROLES.md"
+  ],
+  "semantics": {
+    "local_files_are_bootstrap_references": true,
+    "duplicate_policy_plane": false,
+    "duplicate_verifier_registry": false,
+    "shared_github_assignment_is_operating_role": false,
+    "self_verification_allowed": false,
+    "owner_as_default_sink": false,
+    "orphaned_work_allowed": false,
+    "missing_bootstrap_routes_to": "Engineer / Forge",
+    "read_only_reconciliation_may_continue_when_independently_authorized": true
+  }
+}
