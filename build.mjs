@@ -87,11 +87,27 @@ async function bundleSquarespaceGuidePromotion() {
   await writeFile(widgetPath, `${widget}\n\n${promo}\n`, 'utf8');
 }
 
+async function registerCleanCampaignRoutes() {
+  const routes = [
+    ['water-ready/index.html', 'water-ready.html'],
+    ['health-ready/index.html', 'health-ready.html'],
+    ['education/ai/trust/index.html', 'education/ai/trust.html'],
+    ['education/ai/trust/strategy/index.html', 'education/ai/trust/strategy.html']
+  ];
+  for (const [source, alias] of routes) {
+    const sourcePath = path.join('dist', source);
+    const aliasPath = path.join('dist', alias);
+    await mkdir(path.dirname(aliasPath), { recursive: true });
+    await cp(sourcePath, aliasPath);
+  }
+}
+
 await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 await cp('site', 'dist', { recursive: true });
 await normalizeGuideLinks('dist');
 await injectGuideGate();
 await bundleSquarespaceGuidePromotion();
+await registerCleanCampaignRoutes();
 await injectWhitaker('dist');
-console.log('MJC website copied to dist/, guide access gate applied, Squarespace guide promotion bundled, and Whitaker injected.');
+console.log('MJC website copied to dist/, campaign clean routes registered, guide access gate applied, Squarespace guide promotion bundled, and Whitaker injected.');
