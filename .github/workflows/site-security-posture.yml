@@ -9,6 +9,7 @@ on:
       - "site/**"
       - "tests/site-security-posture.test.mjs"
       - "tests/msp-field-kit.test.mjs"
+      - "tests/control-intelligence-landing.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
       - ".github/workflows/**"
   push:
@@ -21,6 +22,7 @@ on:
       - "site/**"
       - "tests/site-security-posture.test.mjs"
       - "tests/msp-field-kit.test.mjs"
+      - "tests/control-intelligence-landing.test.mjs"
       - "docs/20260818-mjc-web-security-baseline.md"
       - ".github/workflows/**"
 
@@ -53,3 +55,6 @@ jobs:
 
       - name: Validate MSP Decision Assurance field kit
         run: npm run test:msp-kit
+
+      - name: Validate CyberShield AI Control Intelligence landing page
+        run: npm run test:control-intelligence

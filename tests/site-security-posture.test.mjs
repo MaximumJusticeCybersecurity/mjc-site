@@ -19,7 +19,8 @@ const documentRoutes = [
   '/local-digital-brain',
   '/local-digital-brain-guide',
   '/ai-security-ciso-profile',
-  '/msp'
+  '/msp',
+  '/ai-control-intelligence'
 ];
 
 test('Vercel applies the approved security headers to every route', () => {
