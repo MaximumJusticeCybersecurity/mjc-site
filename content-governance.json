@@ -1,9 +1,9 @@
 {
-  "version_timestamp": "2026062613",
+  "version_timestamp": "20260923",
   "status": "implemented-on-review-branch-verification-pending",
   "owner": "Dr. Max Justice",
   "requirements_steward": "Aegis / My AI Business Partner",
-  "implementation_branch": "agent/2026062613-mjc-site-conversion",
+  "implementation_branch": "forge/issue-43-ai-decision-assurance-authority-page",
   "firm_positioning": "Maximum Justice Cybersecurity is the expert-led cybersecurity and AI governance firm",
   "current_product": "CyberShield AI Decision Assurance",
   "current_product_direction": "AI-generated recommendation in -> defensible AI Trust Decision Record out",
@@ -18,11 +18,18 @@
   "current_requirements": [
     "AGENTS.md",
     "docs/2026062312-mjc-site-positioning-and-conversion-requirements.md",
-    "docs/2026062312-content-source-of-truth-and-feedback-currency.md"
+    "docs/2026062312-content-source-of-truth-and-feedback-currency.md",
+    "mjc-site#43",
+    "mjc-site PR #89 architecture",
+    "mjc-site#160 claim/security review"
   ],
   "implemented_files": [
     "site/index.html",
-    "site/llms.txt"
+    "site/llms.txt",
+    "site/ai-decision-assurance.html",
+    "site/assets/decision-assurance/ceo-10-questions.html",
+    "site/sitemap.xml",
+    "vercel.json"
   ],
   "public_claims_prohibited_without_approval_or_evidence": [
     "production readiness",
@@ -44,6 +51,9 @@
     "accessibility_verified": false,
     "mobile_desktop_verified": false,
     "owner_release_approval": false,
-    "deployment_performed": false
+    "deployment_performed": false,
+    "authority_page_implemented": true,
+    "executive_handout_implemented": true,
+    "publication_time_regulatory_revalidation_required": true
   }
 }
