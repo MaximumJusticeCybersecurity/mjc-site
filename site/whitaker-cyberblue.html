@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ask Whitaker | Maximum Justice Cybersecurity</title>
+<style>
+:root{color-scheme:dark;--fg:#eef7ff;--muted:#c5deee;--blue:#62c7ff}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--fg);font:16px/1.5 system-ui,Segoe UI,Arial,sans-serif;background:radial-gradient(ellipse at 50% 25%,#276b9a 0%,#174a73 47%,#0b2d50 100%)}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #598eb3;padding:20px max(20px,5vw)}
+.brand{display:flex;gap:12px;align-items:center}.brand img{width:52px;height:52px;object-fit:contain}.brand strong{letter-spacing:.14em;font-size:15px}.brand small{display:block;font-size:11px;color:var(--muted);letter-spacing:.09em}
+.badge{font-size:12px;color:#d9f7ef}main{max-width:850px;margin:0 auto;text-align:center;padding:44px 18px 70px}
+.eyebrow{letter-spacing:.23em;text-transform:uppercase;color:#c6e4f6;font-size:12px}
+.eye{display:block;margin:34px auto 32px;width:174px;height:174px;border-radius:50%;border:2px solid #4c86b3;background:radial-gradient(circle at 45% 40%,#d2f2ff 0%,#6fd0ff 6%,#2e79ae 17%,#102a4c 34%,#06101c 62%);box-shadow:0 0 0 12px #0b2746,0 0 0 13px #5487ae,0 0 92px #3db2f7,inset 0 0 35px #2b6d9c}
+.eye.active{animation:pulse .48s infinite alternate}@keyframes pulse{to{filter:brightness(1.4);transform:scale(1.035);box-shadow:0 0 0 12px #0b2746,0 0 0 13px #5487ae,0 0 130px #80d4ff}}
+h1{font-weight:400;font-size:clamp(36px,5vw,56px);margin:12px 0}p{color:var(--muted)}.panel{margin:30px auto 0;max-width:680px;text-align:left;border:1px solid #598eb3;border-radius:20px;background:rgba(4,30,58,.79);padding:22px}
+label{display:block;font-weight:600;margin-bottom:8px}textarea{width:100%;min-height:92px;border:1px solid #6e9fbe;background:#0b2946;color:#fff;padding:13px;border-radius:12px;font:inherit;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}button,.button{border:0;border-radius:12px;padding:12px 18px;background:#d9f3ff;color:#09243c;font-weight:700;font:inherit;cursor:pointer;text-decoration:none}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:3px solid #fff;outline-offset:3px}.button.secondary{background:#17486d;color:#fff;border:1px solid #7aa5c2}
+.warning{font-size:13px;color:#e8d5a6;margin-top:18px}#status{font-size:13px;margin-top:12px}#answer{white-space:pre-wrap;margin-top:20px;min-height:30px}
+footer{margin-top:45px;font-size:12px;color:#bbd7ea}
+@media(prefers-reduced-motion:reduce){.eye.active{animation:none}}
+</style></head>
+<body><header><div class="brand"><img src="./mjc-logo.png" alt="MJC shield" onerror="this.style.display='none'"><div><strong>WHITAKER</strong><small>MAXIMUM JUSTICE CYBERSECURITY</small></div></div><div class="badge">PUBLIC CONCIERGE · DEMO PREVIEW</div></header>
+<main><div class="eyebrow">Public intelligence · Governed engagement</div><div id="eye" class="eye" role="img" aria-label="Glowing blue Whitaker eye"></div><h1>How can I help?</h1><p>Ask about cybersecurity, AI governance, vCISO services, or CyberShield.</p>
+<section class="panel" aria-label="Ask Whitaker">
+<label for="question">Your question</label><textarea id="question" placeholder="What can Maximum Justice Cybersecurity do for my organization?"></textarea>
+<div class="actions"><button id="ask" type="button">Ask Whitaker</button><a class="button secondary" href="https://calendly.com/maxjustice" target="_blank" rel="noopener noreferrer">Schedule a conversation</a></div>
+<div class="warning">Do not enter passwords, confidential information, regulated data, or active incident details.</div>
+<div id="status" role="status">Visual review candidate. Live AI conversation is not yet connected.</div><div id="answer" aria-live="polite"></div>
+</section><footer>Public Whitaker is separate from the private MADMAX Brain. No local desktop access.</footer></main>
+<script>
+'use strict';
+const ask=document.getElementById('ask'),status=document.getElementById('status'),answer=document.getElementById('answer'),eye=document.getElementById('eye');
+ask.addEventListener('click',()=>{const q=document.getElementById('question').value.trim();answer.textContent='';if(!q){status.textContent='Enter a question first.';return;}status.textContent='This visual preview has no public AI backend yet. Please schedule a conversation while that service is being verified.';eye.classList.add('active');setTimeout(()=>eye.classList.remove('active'),600);});
+</script></body></html>
